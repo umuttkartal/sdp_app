@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Circulatio</string>
+    <string name="TURN_LED_OFF">Turn LED Off!</string>
+    <string name="TURN_LED_ON">Turn LED On!</string>
+    <string name="disconnect_pairing">Disconnect Pairing</string>
+    <string name="progress">progress</string>
+    <string name="select_a_pairing_device">Select A Pairing Device</string>
+    <string name="pair">Pair</string>
+    <string name="BUZZER_ON">BUZZER GO BRR</string>
+    <string name="BUZZER_OFF">BUZZER OFF!</string>
+    <string name="circulatio">CIRCULATIO</string>
+    <string name="find_devices">Find Devices</string>
+    <string name="connect_device">Connect to your Circulatio!</string>
 </resources>
