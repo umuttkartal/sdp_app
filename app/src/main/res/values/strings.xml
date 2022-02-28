@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">Circulatio</string>
+    <string name="circulatio_logo">Circulatio logo</string>
+    <string name="device">Device</string>
+    <string name="tap_to_set_up_circulatio">Tap to set up Circulatio</string>
+    <string name="what_is_your_name">What is your name?</string>
+    <string name="name">Name</string>
+    <string name="please_select_your_circulatio">Please select your Circulatio:</string>
+    <string name="submit">submit</string>
+    <string name="confirm_checkbox">You confirm that you have read Circulatio\'s user manual</string>
+    <string name="your_circulatio">Your Circulatio</string>
+    <string name="not_connected">Not connected</string>
+    <string name="massage">Massage</string>
+    <string name="vibration_type">Vibration Type</string>
+    <string name="massage_speed">Massage Speed</string>
+    <string name="massage_length">Massage Length</string>
+    <string name="start">START</string>
+    <string name="turn_massage_on_off">Turn massage on/off</string>
+    <string name="user_manual">User Manual</string>
 </resources>
