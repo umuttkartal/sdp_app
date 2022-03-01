@@ -54,4 +54,6 @@
         reduce risk of various diseases, improve mental health and mood, etc, which Circulatio obviously cannot provide.
 
     </string>
+    <string name="stop">STOP</string>
+    <string name="pause">PAUSE</string>
 </resources>

@@ -10,30 +10,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Circulatio">
         <activity
-            android:name=".UserManual"
+            android:name=".MassageCounter"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
+        <activity
+            android:name=".UserManual"
+            android:exported="true" />
         <activity
             android:name=".MassageSetup"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".HomeScreen"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".SetUpInfo"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".InitialSetUp"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
