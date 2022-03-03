@@ -25,7 +25,9 @@ import java.util.UUID;
 public class BLE extends AppCompatActivity {
 
     Button btn1, btn2, btn3, btn4, btnDis;
-    String address = null;
+//    String address = null;
+    String address = "98:D3:32:31:30:0F";
+
     private ProgressDialog progress;
     BluetoothAdapter myBluetooth = null;
     BluetoothSocket btSocket = null;
@@ -37,54 +39,54 @@ public class BLE extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ble_act);
+        setContentView(R.layout.activity_home_screen);
 
 
         Intent intent = getIntent();
 
         address = intent.getStringExtra(MainActivity.EXTRA_ADDRESS);
 
-        btn1 =  findViewById(R.id.led_off);
-        btn2 =  findViewById(R.id.led_on);
-        btn3 =  findViewById(R.id.buzzer_on);
-        btn4 =  findViewById(R.id.buzzer_off);
-        //For additional actions to be performed
-        btnDis = findViewById(R.id.button4);
+//        btn1 =  findViewById(R.id.led_off);
+//        btn2 =  findViewById(R.id.led_on);
+//        btn3 =  findViewById(R.id.buzzer_on);
+//        btn4 =  findViewById(R.id.buzzer_off);
+//        //For additional actions to be performed
+//        btnDis = findViewById(R.id.button4);
 
         new BLE.ConnectBT().execute();
 
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                sendSignal("0");
-            }
-        });
-
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                sendSignal("1");
-            }
-        });
-        btn3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                sendSignal("2");
-            }
-        });
-        btn4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                sendSignal("3");
-            }
-        });
-
-        btnDis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                Disconnect();
-            }
-        });
+//        btn1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick (View v) {
+//                sendSignal("0");
+//            }
+//        });
+//
+//        btn2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick (View v) {
+//                sendSignal("1");
+//            }
+//        });
+//        btn3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick (View v) {
+//                sendSignal("2");
+//            }
+//        });
+//        btn4.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick (View v) {
+//                sendSignal("3");
+//            }
+//        });
+//
+//        btnDis.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick (View v) {
+//                Disconnect();
+//            }
+//        });
     }
 
 

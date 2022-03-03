@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,16 +22,16 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter myBluetooth = null;
     private Set<BluetoothDevice> pairedDevices;
     public static String EXTRA_ADDRESS = "98:D3:32:31:30:0F";
-    ListView devicelist;
+//    ListView devicelist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button btnPaired;
+//        Button btnPaired;
 
-        btnPaired = (Button) findViewById(R.id.button);
-        devicelist = (ListView) findViewById(R.id.listView);
+//        btnPaired = (Button) findViewById(R.id.button);
+//        devicelist = (ListView) findViewById(R.id.listView);
 
         myBluetooth = BluetoothAdapter.getDefaultAdapter();
         if ( myBluetooth==null ) {
@@ -42,41 +43,73 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(turnBTon, 1);
         }
 
-        btnPaired.setOnClickListener(new View.OnClickListener() {
+//        btnPaired.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                pairedDevicesList();
+//            }
+//        });
+
+    }
+
+//    private void pairedDevicesList () {
+//        pairedDevices = myBluetooth.getBondedDevices();
+//        ArrayList list = new ArrayList();
+//
+//        if ( pairedDevices.size() > 0 ) {
+//            for ( BluetoothDevice bt : pairedDevices ) {
+//                list.add(bt.getName().toString() + "\n" + bt.getAddress().toString());
+//            }
+//        } else {
+//            Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
+//        }
+//
+//        final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
+//        devicelist.setAdapter(adapter);
+//        devicelist.setOnItemClickListener(myListClickListener);
+//    }
+
+//    private AdapterView.OnItemClickListener myListClickListener = new AdapterView.OnItemClickListener() {
+//        @Override
+//        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//            String info = ((TextView) view).getText().toString();
+//            String address = info.substring(info.length()-17);
+//
+//            Intent i = new Intent(MainActivity.this, BLE.class);
+//            i.putExtra(EXTRA_ADDRESS, address);
+//            startActivity(i);
+//        }
+//    };
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onClick(View v) {
-                pairedDevicesList();
+            public void run() {
+                //This method will be executed once the timer is over
+                // Start your app main activity
+                Intent i = new Intent(MainActivity.this, BLE.class);
+                pairedDevices = myBluetooth.getBondedDevices();
+                String address = "";
+
+                if ( pairedDevices.size() > 0 ) {
+                    for ( BluetoothDevice bt : pairedDevices ) {
+                        address = bt.getAddress().toString();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
+                }
+                i.putExtra(EXTRA_ADDRESS, "98:D3:32:31:30:0F");
+                startActivity(i);
+                // close this activity
+                finish();
             }
-        });
+        }, 3000);
+
+//        startActivity(i);
 
     }
-
-    private void pairedDevicesList () {
-        pairedDevices = myBluetooth.getBondedDevices();
-        ArrayList list = new ArrayList();
-
-        if ( pairedDevices.size() > 0 ) {
-            for ( BluetoothDevice bt : pairedDevices ) {
-                list.add(bt.getName().toString() + "\n" + bt.getAddress().toString());
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
-        }
-
-        final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
-        devicelist.setAdapter(adapter);
-        devicelist.setOnItemClickListener(myListClickListener);
-    }
-
-    private AdapterView.OnItemClickListener myListClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String info = ((TextView) view).getText().toString();
-            String address = info.substring(info.length()-17);
-
-            Intent i = new Intent(MainActivity.this, BLE.class);
-            i.putExtra(EXTRA_ADDRESS, address);
-            startActivity(i);
-        }
-    };
 }
