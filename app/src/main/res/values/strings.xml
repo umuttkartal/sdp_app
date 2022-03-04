@@ -56,4 +56,7 @@
     </string>
     <string name="stop">STOP</string>
     <string name="pause">PAUSE</string>
+
+    <string name="notification_circulatio_title">Circulatio</string>
+    <string name="notification_circulatio_text">Bluetooth Connection</string>
 </resources>

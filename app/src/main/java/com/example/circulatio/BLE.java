@@ -44,7 +44,7 @@ public class BLE extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        address = intent.getStringExtra(MainActivity.EXTRA_ADDRESS);
+//        address = intent.getStringExtra(MainActivity.EXTRA_ADDRESS);
 
 //        btn1 =  findViewById(R.id.led_off);
 //        btn2 =  findViewById(R.id.led_on);

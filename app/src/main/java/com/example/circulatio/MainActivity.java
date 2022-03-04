@@ -2,11 +2,16 @@ package com.example.circulatio;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,100 +21,95 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
-    private BluetoothAdapter myBluetooth = null;
-    private Set<BluetoothDevice> pairedDevices;
-    public static String EXTRA_ADDRESS = "98:D3:32:31:30:0F";
-//    ListView devicelist;
+    private boolean mIsActivityRunning = false;
+
+    private Bundle mSavedInstanceState;
+    private boolean mIsCirculatioConnected;
+    private BluetoothAdapter mBluetoothAdapter;
+//    private PowerManager.WakeLock wakeLock;
+    private Utils mUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-//        Button btnPaired;
-
-//        btnPaired = (Button) findViewById(R.id.button);
-//        devicelist = (ListView) findViewById(R.id.listView);
-
-        myBluetooth = BluetoothAdapter.getDefaultAdapter();
-        if ( myBluetooth==null ) {
-            Toast.makeText(getApplicationContext(), "Bluetooth device not available", Toast.LENGTH_LONG).show();
-            finish();
-        }
-        else if ( !myBluetooth.isEnabled() ) {
-            Intent turnBTon = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(turnBTon, 1);
-        }
-
-//        btnPaired.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                pairedDevicesList();
-//            }
-//        });
+        mIsActivityRunning = true;
+        mSavedInstanceState = savedInstanceState;
+        mUtils = Utils.getInstance();
+        initMainActivity();
 
     }
 
-//    private void pairedDevicesList () {
-//        pairedDevices = myBluetooth.getBondedDevices();
-//        ArrayList list = new ArrayList();
-//
-//        if ( pairedDevices.size() > 0 ) {
-//            for ( BluetoothDevice bt : pairedDevices ) {
-//                list.add(bt.getName().toString() + "\n" + bt.getAddress().toString());
-//            }
-//        } else {
-//            Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
-//        }
-//
-//        final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
-//        devicelist.setAdapter(adapter);
-//        devicelist.setOnItemClickListener(myListClickListener);
-//    }
+    private boolean startCirculatioService() {
+        boolean alreadyRunning = Utils.isServiceRunning(BluetoothService.class, this);
+        // Only start service if it is not already running.
+        Log.i(this.getClass().getCanonicalName(), String.format("Circulatio Service starting: already running? = %s", alreadyRunning));
+        if (!alreadyRunning) {
+            Log.i("Main Activity", "Started Circulatio Bluetooth service");
+            Intent intentStartService = new Intent(this, BluetoothService.class);
+            startService(intentStartService);
+        } else {
+            Log.i("Main Activity", "Circulatio Bluetooth service already running. Don't start it again.");
+        }
+        return alreadyRunning;
+    }
 
-//    private AdapterView.OnItemClickListener myListClickListener = new AdapterView.OnItemClickListener() {
-//        @Override
-//        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            String info = ((TextView) view).getText().toString();
-//            String address = info.substring(info.length()-17);
-//
-//            Intent i = new Intent(MainActivity.this, BLE.class);
-//            i.putExtra(EXTRA_ADDRESS, address);
-//            startActivity(i);
-//        }
-//    };
+    @SuppressLint("MissingPermission")
+    public void initMainActivity() {
+        Log.i("MainActivity", "Initialising main activity");
+
+        // Setup the part of the layout which is the same for both modes
+        setContentView(R.layout.activity_home_screen);
+
+//        aquireWakeLockToKeepAppRunning();
+
+
+        // Load connection state
+        if (mSavedInstanceState != null) {
+
+            mIsCirculatioConnected = mSavedInstanceState.getBoolean(Constants.IS_CIRCULATIO_CONNECTED);
+            updateCirculatioConnection(mIsCirculatioConnected);
+        }
+
+        BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext().getSystemService(
+                Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+
+        startCirculatioService();
+    }
+
+    private void updateCirculatioConnection(boolean isConnected) {
+        mIsCirculatioConnected = isConnected;
+    }
+
+//    @SuppressLint("InvalidWakeLockTag")
+//    private void aquireWakeLockToKeepAppRunning() {
+//        // Request wake lock to keep CPU running for all services of the app
+//        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+//        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag");
+//        wakeLock.acquire(10*60*1000L /*10 minutes*/);
+//    }
 
     @Override
     protected void onResume() {
-
         super.onResume();
+        Log.i("MainActivity", "App was brought into foreground (Main Activity) resumed");
+        mIsActivityRunning = true;
+    }
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //This method will be executed once the timer is over
-                // Start your app main activity
-                Intent i = new Intent(MainActivity.this, BLE.class);
-                pairedDevices = myBluetooth.getBondedDevices();
-                String address = "";
+    @Override
+    protected void onPause() {
+        mIsActivityRunning = false;
+        super.onPause();
+    }
 
-                if ( pairedDevices.size() > 0 ) {
-                    for ( BluetoothDevice bt : pairedDevices ) {
-                        address = bt.getAddress().toString();
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
-                }
-                i.putExtra(EXTRA_ADDRESS, "98:D3:32:31:30:0F");
-                startActivity(i);
-                // close this activity
-                finish();
-            }
-        }, 3000);
+    @Override
+    public void onDestroy() {
+        Log.i("DF", "App is being destroyed");
 
-//        startActivity(i);
-
+        super.onDestroy();
     }
 }
