@@ -1,5 +1,6 @@
 package com.example.circulatio;
 
+import com.example.circulatio.BluetoothService;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
@@ -8,6 +9,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothSocket;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -61,18 +63,19 @@ public class MainActivity extends AppCompatActivity {
         Log.i(this.getClass().getCanonicalName(), String.format("Circulatio Service starting: already running? = %s", alreadyRunning));
         if (!alreadyRunning) {
             Log.i("Main Activity", "Started Circulatio Bluetooth service");
-//            Intent intentStartService = new Intent(this, BluetoothService.class);
-//            startService(intentStartService);
-            try {
-                myBluetooth = BluetoothAdapter.getDefaultAdapter();
-                BluetoothDevice device = myBluetooth.getRemoteDevice(address);
-                btSocket = device.createInsecureRfcommSocketToServiceRecord(myUUID);
-                BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
-                btSocket.connect();
-                mIsCirculatioConnected = true;
-            }catch (IOException e) {
-                mIsCirculatioConnected=false;
-            }
+            Intent intentStartService = new Intent(this, BluetoothService.class);
+            startService(intentStartService);
+            mIsCirculatioConnected = true;
+//            try {
+//                myBluetooth = BluetoothAdapter.getDefaultAdapter();
+//                BluetoothDevice device = myBluetooth.getRemoteDevice(address);
+//                btSocket = device.createInsecureRfcommSocketToServiceRecord(myUUID);
+//                BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+//                btSocket.connect();
+//                mIsCirculatioConnected = true;
+//            }catch (IOException e) {
+//                mIsCirculatioConnected=false;
+//            }
         } else {
             Log.i("Main Activity", "Circulatio Bluetooth service already running. Don't start it again.");
         }
@@ -90,15 +93,26 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Load connection state
-//        if (mSavedInstanceState != null) {
-//
-//            mIsCirculatioConnected = mSavedInstanceState.getBoolean(Constants.IS_CIRCULATIO_CONNECTED);
-//            updateCirculatioConnection(mIsCirculatioConnected);
-//        }
-//
-//        BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext().getSystemService(
-//                Context.BLUETOOTH_SERVICE);
-//        mBluetoothAdapter = bluetoothManager.getAdapter();
+        if (mSavedInstanceState != null) {
+
+            mIsCirculatioConnected = mSavedInstanceState.getBoolean(Constants.IS_CIRCULATIO_CONNECTED);
+            updateCirculatioConnection(mIsCirculatioConnected);
+            System.out.println("CIGUBUGU");
+        }
+
+        BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext().getSystemService(
+                Context.BLUETOOTH_SERVICE);
+
+        System.out.println("CIGUBUGU" + bluetoothManager);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+        try {
+            BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+            btSocket = device.createInsecureRfcommSocketToServiceRecord(myUUID);
+            BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+            btSocket.connect();
+        } catch (IOException e) {
+            Log.i("BLE", "Could not connect to device!!!");
+        }
 
         startCirculatioService();
     }
@@ -122,9 +136,17 @@ public class MainActivity extends AppCompatActivity {
             {
                 if(mIsCirculatioConnected) {
                     if (isChecked) {
+//                        Intent intent = new Intent();
+//                        intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_ON);
+//                        // Data you need to pass to activity
+//                        getApplicationContext().sendBroadcast(intent);
                         sendSignal("1");
 
                     } else {
+//                        Intent intent = new Intent();
+//                        intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_ON);
+//                        // Data you need to pass to activity
+//                        getApplicationContext().sendBroadcast(intent);
                         sendSignal("0");
                     }
                 }

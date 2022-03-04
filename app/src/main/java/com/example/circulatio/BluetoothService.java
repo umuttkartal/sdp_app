@@ -10,8 +10,10 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
@@ -34,6 +36,9 @@ public class BluetoothService extends Service {
     private boolean isBtConnected = false;
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private boolean ConnectSuccess = true;
+
+    private BroadcastReceiver buzzerOnSignalReceiver;
+    private BroadcastReceiver buzzerOffSignalReceiver;
 
 
     @Nullable
@@ -111,18 +116,42 @@ public class BluetoothService extends Service {
         mBluetoothAdapter = mBluetoothManager.getAdapter();
 
         try {
-            if ( btSocket==null || !isBtConnected ) {
-                myBluetooth = BluetoothAdapter.getDefaultAdapter();
-                BluetoothDevice device = myBluetooth.getRemoteDevice(address);
-                btSocket = device.createInsecureRfcommSocketToServiceRecord(myUUID);
-                BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
-                btSocket.connect();
+//            if ( btSocket==null || !isBtConnected ) {
+//            myBluetooth = BluetoothAdapter.getDefaultAdapter();
+            BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+            btSocket = device.createInsecureRfcommSocketToServiceRecord(myUUID);
+            BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+            btSocket.connect();
 //                    }
-            }
+//            }
         } catch (IOException e) {
             ConnectSuccess = false;
             Log.i("BLE", "Could not connect to device!!!");
         }
+
+        final IntentFilter buzzerOn = new IntentFilter();
+        buzzerOn.addAction(Constants.ACTION_CIRCULATIO_BUZZER_ON);
+        buzzerOnSignalReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i("BLE", "Got buzzer on message");
+                sendSignal("1");
+            }
+        };
+        registerReceiver(buzzerOnSignalReceiver, buzzerOn);
+
+        final IntentFilter buzzerOff = new IntentFilter();
+        buzzerOff.addAction(Constants.ACTION_CIRCULATIO_BUZZER_OFF);
+        buzzerOnSignalReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i("BLE", "Got buzzer off message");
+                sendSignal("0");
+            }
+        };
+        registerReceiver(buzzerOffSignalReceiver, buzzerOff);
     }
 
     private void sendSignal ( String number ) {
@@ -139,6 +168,9 @@ public class BluetoothService extends Service {
     public void onDestroy() {
         Log.i("BLUETOOTH", "Service has been stopped");
         super.onDestroy();
+        unregisterReceiver(buzzerOnSignalReceiver);
+        unregisterReceiver(buzzerOffSignalReceiver);
+
         int pid = android.os.Process.myPid();
         android.os.Process.killProcess(pid);
     }
