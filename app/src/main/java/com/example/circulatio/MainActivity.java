@@ -1,11 +1,13 @@
 package com.example.circulatio;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,22 +18,32 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
     private boolean mIsActivityRunning = false;
+
+    String address = "98:D3:32:31:30:0F";
+    static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     private Bundle mSavedInstanceState;
     private boolean mIsCirculatioConnected;
     private BluetoothAdapter mBluetoothAdapter;
 //    private PowerManager.WakeLock wakeLock;
     private Utils mUtils;
+    BluetoothAdapter myBluetooth = null;
+    BluetoothSocket btSocket = null;
+    private boolean isBtConnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +61,18 @@ public class MainActivity extends AppCompatActivity {
         Log.i(this.getClass().getCanonicalName(), String.format("Circulatio Service starting: already running? = %s", alreadyRunning));
         if (!alreadyRunning) {
             Log.i("Main Activity", "Started Circulatio Bluetooth service");
-            Intent intentStartService = new Intent(this, BluetoothService.class);
-            startService(intentStartService);
+//            Intent intentStartService = new Intent(this, BluetoothService.class);
+//            startService(intentStartService);
+            try {
+                myBluetooth = BluetoothAdapter.getDefaultAdapter();
+                BluetoothDevice device = myBluetooth.getRemoteDevice(address);
+                btSocket = device.createInsecureRfcommSocketToServiceRecord(myUUID);
+                BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+                btSocket.connect();
+                mIsCirculatioConnected = true;
+            }catch (IOException e) {
+                mIsCirculatioConnected=false;
+            }
         } else {
             Log.i("Main Activity", "Circulatio Bluetooth service already running. Don't start it again.");
         }
@@ -68,15 +90,15 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Load connection state
-        if (mSavedInstanceState != null) {
-
-            mIsCirculatioConnected = mSavedInstanceState.getBoolean(Constants.IS_CIRCULATIO_CONNECTED);
-            updateCirculatioConnection(mIsCirculatioConnected);
-        }
-
-        BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext().getSystemService(
-                Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
+//        if (mSavedInstanceState != null) {
+//
+//            mIsCirculatioConnected = mSavedInstanceState.getBoolean(Constants.IS_CIRCULATIO_CONNECTED);
+//            updateCirculatioConnection(mIsCirculatioConnected);
+//        }
+//
+//        BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext().getSystemService(
+//                Context.BLUETOOTH_SERVICE);
+//        mBluetoothAdapter = bluetoothManager.getAdapter();
 
         startCirculatioService();
     }
@@ -85,19 +107,53 @@ public class MainActivity extends AppCompatActivity {
         mIsCirculatioConnected = isConnected;
     }
 
-//    @SuppressLint("InvalidWakeLockTag")
-//    private void aquireWakeLockToKeepAppRunning() {
-//        // Request wake lock to keep CPU running for all services of the app
-//        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-//        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag");
-//        wakeLock.acquire(10*60*1000L /*10 minutes*/);
-//    }
-
     @Override
     protected void onResume() {
         super.onResume();
         Log.i("MainActivity", "App was brought into foreground (Main Activity) resumed");
         mIsActivityRunning = true;
+
+        Boolean isTouched = false;
+        SwitchCompat switch1 = findViewById(R.id.switch1);
+        switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                if(mIsCirculatioConnected) {
+                    if (isChecked) {
+                        sendSignal("1");
+
+                    } else {
+                        sendSignal("0");
+                    }
+                }
+                else{
+                    Log.i("BL ERROR", "Circulatio is not connected!");
+                }
+            }
+        });
+
+        ImageButton btnInfo =  findViewById(R.id.buttonInfo);
+        btnInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View v) {
+                Intent inn1=getIntent();
+                inn1=new Intent(MainActivity.this,UserManual.class);
+                startActivity(inn1);
+            }
+        });
+
+    }
+
+    private void sendSignal (String number ) {
+        if ( btSocket != null ) {
+            try {
+                btSocket.getOutputStream().write(number.toString().getBytes());
+            } catch (IOException e) {
+                Log.i("Error", "Error");
+            }
+        }
     }
 
     @Override

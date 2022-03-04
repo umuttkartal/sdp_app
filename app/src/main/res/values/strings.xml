@@ -10,6 +10,7 @@
     <string name="confirm_checkbox">You confirm that you have read Circulatio\'s user manual</string>
     <string name="your_circulatio">Your Circulatio</string>
     <string name="not_connected">Not connected</string>
+    <string name="connected">Connected</string>
     <string name="massage">Massage</string>
     <string name="vibration_type">Vibration Type</string>
     <string name="massage_speed">Massage Speed</string>

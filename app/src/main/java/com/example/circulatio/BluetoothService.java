@@ -30,7 +30,7 @@ public class BluetoothService extends Service {
 
     private ProgressDialog progress;
     BluetoothAdapter myBluetooth = null;
-    BluetoothSocket btSocket = null;
+    static BluetoothSocket btSocket = null;
     private boolean isBtConnected = false;
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private boolean ConnectSuccess = true;
@@ -47,6 +47,10 @@ public class BluetoothService extends Service {
         super.onCreate();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
             startMyOwnForeground();
+    }
+
+    public BluetoothSocket getBtSocket(){
+        return btSocket;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -118,6 +122,16 @@ public class BluetoothService extends Service {
         } catch (IOException e) {
             ConnectSuccess = false;
             Log.i("BLE", "Could not connect to device!!!");
+        }
+    }
+
+    private void sendSignal ( String number ) {
+        if ( btSocket != null ) {
+            try {
+                btSocket.getOutputStream().write(number.toString().getBytes());
+            } catch (IOException e) {
+                Log.i("BL", "Error");
+            }
         }
     }
 
