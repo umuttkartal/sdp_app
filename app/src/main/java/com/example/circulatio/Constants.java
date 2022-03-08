@@ -10,4 +10,7 @@ public class Constants {
     public static final String ACTION_CIRCULATIO_BUZZER_OFF =
             "com.specknet.circulatio.CIRCULATIO_BUZZER_OFF";
 
+    public static final String ACTION_CIRCULATIO_RECONNECT =
+            "com.specknet.circulatio.CIRCULATIO_RECONNECT";
+
 }

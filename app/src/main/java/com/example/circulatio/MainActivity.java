@@ -3,15 +3,22 @@ package com.example.circulatio;
 import com.example.circulatio.BluetoothService;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.lifecycle.Lifecycle;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Notification;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothProfile;
 import android.bluetooth.BluetoothSocket;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -35,17 +42,35 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
     private boolean mIsActivityRunning = false;
 
-    String address = "98:D3:32:31:30:0F";
-    static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-
     private Bundle mSavedInstanceState;
     private boolean mIsCirculatioConnected;
     private BluetoothAdapter mBluetoothAdapter;
 //    private PowerManager.WakeLock wakeLock;
     private Utils mUtils;
-    BluetoothAdapter myBluetooth = null;
-    BluetoothSocket btSocket = null;
-    private boolean isBtConnected = false;
+    BluetoothManager bluetoothManager;
+    Button btnConnection;
+    AlertDialog.Builder addBLEOffDialog;
+    AlertDialog.Builder addCirculatioNotFoundDialog;
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
+                //Do something if connected
+                btnConnection.setText(R.string.connected);
+                mIsCirculatioConnected = true;
+                Log.i("BLT", "Bluetooth connected...");
+            }
+            else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+                //Do something if disconnected
+                btnConnection.setText(R.string.not_connected);
+                mIsCirculatioConnected = false;
+                Log.i("BLT", "Bluetooth disconnected...");
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         mIsActivityRunning = true;
         mSavedInstanceState = savedInstanceState;
         mUtils = Utils.getInstance();
+
         initMainActivity();
 
     }
@@ -64,18 +90,8 @@ public class MainActivity extends AppCompatActivity {
         if (!alreadyRunning) {
             Log.i("Main Activity", "Started Circulatio Bluetooth service");
             Intent intentStartService = new Intent(this, BluetoothService.class);
-            startService(intentStartService);
-            mIsCirculatioConnected = true;
-//            try {
-//                myBluetooth = BluetoothAdapter.getDefaultAdapter();
-//                BluetoothDevice device = myBluetooth.getRemoteDevice(address);
-//                btSocket = device.createInsecureRfcommSocketToServiceRecord(myUUID);
-//                BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
-//                btSocket.connect();
-//                mIsCirculatioConnected = true;
-//            }catch (IOException e) {
-//                mIsCirculatioConnected=false;
-//            }
+            getApplicationContext().startService(intentStartService);
+//            mIsCirculatioConnected = true;
         } else {
             Log.i("Main Activity", "Circulatio Bluetooth service already running. Don't start it again.");
         }
@@ -89,45 +105,43 @@ public class MainActivity extends AppCompatActivity {
         // Setup the part of the layout which is the same for both modes
         setContentView(R.layout.activity_home_screen);
 
-//        aquireWakeLockToKeepAppRunning();
+        btnConnection = findViewById(R.id.bltButton);
 
 
         // Load connection state
         if (mSavedInstanceState != null) {
 
-            mIsCirculatioConnected = mSavedInstanceState.getBoolean(Constants.IS_CIRCULATIO_CONNECTED);
-            updateCirculatioConnection(mIsCirculatioConnected);
-            System.out.println("CIGUBUGU");
+//            mIsCirculatioConnected = mSavedInstanceState.getBoolean(Constants.IS_CIRCULATIO_CONNECTED);
+//            updateCirculatioConnection(mIsCirculatioConnected);
+            System.out.println("CIGUBUGU Connected?" + mIsCirculatioConnected);
         }
 
-        BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext().getSystemService(
+        bluetoothManager = (BluetoothManager) getApplicationContext().getSystemService(
                 Context.BLUETOOTH_SERVICE);
 
-        System.out.println("CIGUBUGU" + bluetoothManager);
         mBluetoothAdapter = bluetoothManager.getAdapter();
-        try {
-            BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-            btSocket = device.createInsecureRfcommSocketToServiceRecord(myUUID);
-            BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
-            btSocket.connect();
-        } catch (IOException e) {
-            Log.i("BLE", "Could not connect to device!!!");
-        }
 
         startCirculatioService();
-    }
 
-    private void updateCirculatioConnection(boolean isConnected) {
-        mIsCirculatioConnected = isConnected;
-    }
+        IntentFilter filter1 = new IntentFilter();
+        filter1.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+        filter1.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+        filter1.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        registerReceiver(mReceiver, filter1);
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i("MainActivity", "App was brought into foreground (Main Activity) resumed");
-        mIsActivityRunning = true;
+        addBLEOffDialog = new AlertDialog.Builder(this).setTitle("Device Bluetooth Off")
+                .setMessage("Please turn on Bluetooth on your device to use Circulatio")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }});
+        addCirculatioNotFoundDialog = new AlertDialog.Builder(this).setTitle("Circulatio Not Found")
+                .setMessage("Please ensure Circulatio is turned on")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }});
 
-        Boolean isTouched = false;
         SwitchCompat switch1 = findViewById(R.id.switch1);
         switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
@@ -136,22 +150,17 @@ public class MainActivity extends AppCompatActivity {
             {
                 if(mIsCirculatioConnected) {
                     if (isChecked) {
-//                        Intent intent = new Intent();
-//                        intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_ON);
-//                        // Data you need to pass to activity
-//                        getApplicationContext().sendBroadcast(intent);
-                        sendSignal("1");
+                        Intent intent = new Intent();
+                        intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_ON);
+                        // Data you need to pass to activity
+                        getApplicationContext().sendBroadcast(intent);
 
                     } else {
-//                        Intent intent = new Intent();
-//                        intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_ON);
-//                        // Data you need to pass to activity
-//                        getApplicationContext().sendBroadcast(intent);
-                        sendSignal("0");
+                        Intent intent = new Intent();
+                        intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_OFF);
+                        // Data you need to pass to activity
+                        getApplicationContext().sendBroadcast(intent);
                     }
-                }
-                else{
-                    Log.i("BL ERROR", "Circulatio is not connected!");
                 }
             }
         });
@@ -166,16 +175,50 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+        btnConnection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!mIsCirculatioConnected && (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF)){
+                    addBLEOffDialog.show();
+                }
+                else if(!mIsCirculatioConnected && (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_ON)){
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_CIRCULATIO_RECONNECT);
+                    // Data you need to pass to activity
+                    getApplicationContext().sendBroadcast(intent);
+                    btnConnection.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(!mIsCirculatioConnected){
+                                addCirculatioNotFoundDialog.show();
+                            }
+                        }
+                    }, 2000);
+                }
+            }
+        });
+
     }
 
-    private void sendSignal (String number ) {
-        if ( btSocket != null ) {
-            try {
-                btSocket.getOutputStream().write(number.toString().getBytes());
-            } catch (IOException e) {
-                Log.i("Error", "Error");
-            }
+    private void updateCirculatioConnection(boolean isConnected) {
+        mIsCirculatioConnected = isConnected;
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("MainActivity", "App was brought into foreground (Main Activity) resumed");
+        mIsActivityRunning = true;
+
+        Boolean isTouched = false;
+
+        if(mIsCirculatioConnected){
+            btnConnection.setText(R.string.connected);
         }
+
     }
 
     @Override
@@ -187,6 +230,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         Log.i("DF", "App is being destroyed");
+        unregisterReceiver(mReceiver);
 
         super.onDestroy();
     }
