@@ -24,6 +24,8 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -71,6 +73,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    public void blinkBLTButton(View view) {
+        Animation startAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking_animation_not_repeated);
+        btnConnection.startAnimation(startAnimation);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

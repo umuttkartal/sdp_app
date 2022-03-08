@@ -14,11 +14,12 @@
         android:layout_marginTop="48dp"
         android:layout_marginRight="24dp"
         android:background="@drawable/border1"
+        android:onClick="blinkBLTButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-    />
+        tools:ignore="OnClick" />
 
     <TextView
         android:id="@+id/CirculatioName"
