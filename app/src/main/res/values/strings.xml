@@ -6,6 +6,7 @@
     <string name="what_is_your_name">What is your name?</string>
     <string name="name">Name</string>
     <string name="please_select_your_circulatio">Please select your Circulatio:</string>
+    <string name="please_enter_your_circulatio_pin">Please enter your Circulatio Pin:</string>
     <string name="submit">submit</string>
     <string name="confirm_checkbox">You confirm that you have read Circulatio\'s user manual</string>
     <string name="your_circulatio">Your Circulatio</string>
