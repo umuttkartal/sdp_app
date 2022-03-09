@@ -5,15 +5,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 /**
  * This class control the Setup Info Screen.
  */
-public class SetUpInfo extends AppCompatActivity {
+public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+
+
+    private String[] deviceList = {"Circulatio Device"};
 
     private EditText textEnterName;
     private Spinner spinnerBluetoothDevice;
@@ -31,6 +37,11 @@ public class SetUpInfo extends AppCompatActivity {
         this.textEnterPin =  findViewById(R.id.enter_pin);
         this.checkboxUserManual = findViewById(R.id.checkbox_user_manual);
         this.buttonSubmit = findViewById(R.id.btn_submit_setup_info);
+
+        spinnerBluetoothDevice.setOnItemSelectedListener(this);
+        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,deviceList);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerBluetoothDevice.setAdapter(aa);
 
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
 
@@ -52,5 +63,13 @@ public class SetUpInfo extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+        Toast.makeText(getApplicationContext(),deviceList[position] , Toast.LENGTH_LONG).show();
+    }
 
+    @Override
+    public void onNothingSelected(AdapterView<?> arg0) {
+        // Needs Implemented
+    }
 }

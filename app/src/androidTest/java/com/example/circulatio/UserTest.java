@@ -22,50 +22,50 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class UserTest {
 
-    private Context context;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
+    private static Context context;
+    private static SharedPreferences sharedPreferences;
+    private static SharedPreferences.Editor editor;
 
     @BeforeClass
-    private void testSetup() {
+    public static void testSetup() {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         sharedPreferences = context.getSharedPreferences("CirculatioUserData", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
 
     @Test
-    private void testValidUserData_True() {
+    public void testValidUserData_True() {
         boolean validUser = User.isValidUserData("Connor","ExampleDevice", "12345", true);
         assertTrue(validUser);
     }
 
     @Test
-    private void testValidUserData_False1() {
+    public void testValidUserData_False1() {
         boolean validUser = User.isValidUserData("","ExampleDevice", "12345", true);
         assertFalse(validUser);
     }
 
     @Test
-    private void testValidUserData_False2() {
+    public void testValidUserData_False2() {
         boolean validUser = User.isValidUserData("Skaiste","ExampleDevice", "12345", false);
         assertFalse(validUser);
     }
 
     @Test
-    private void testValidUserData_False3() {
+    public void testValidUserData_False3() {
         boolean validUser = User.isValidUserData("","ExampleDevice", "12345", false);
         assertFalse(validUser);
     }
 
     @Test
-    private void testUserCreation() {
+    public void testUserCreation() {
         User.createUser("Connor","ExampleDevice", "12345", true, context);
         boolean userExists = User.loadUserData(context);
         assertTrue(userExists);
     }
 
     @Test
-    private void testUserCreation_Advanced() {
+    public void testUserCreation_Advanced() {
         String testName = "Connor";
         String testDeviceID = "ExampleDevice";
         String testDevicePin = "12345";
@@ -80,7 +80,7 @@ public class UserTest {
     }
 
     @Test
-    private void testUserDeletion() {
+    public void testUserDeletion() {
         User.deleteUserData(context);
         boolean userExists = User.loadUserData(context);
         assertFalse(userExists);
