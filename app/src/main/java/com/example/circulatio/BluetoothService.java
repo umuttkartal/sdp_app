@@ -28,13 +28,16 @@ import java.util.UUID;
 
 public class BluetoothService extends Service {
     private BluetoothAdapter mBluetoothAdapter;
-    String address = "98:D3:32:31:30:0F";
+    String addressHC = "98:D3:32:31:30:0F";
+    String address = "84:CC:A8:11:F5:72";
 
     private ProgressDialog progress;
     BluetoothAdapter myBluetooth = null;
     static BluetoothSocket btSocket = null;
     private boolean isBtConnected = false;
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+//    static final UUID myServiceUUID = UUID.fromString("4fafc201-1fb5-459e-8fcc-c5c9c331914b");
+//    static final UUID myUUID = UUID.fromString("beb5483e-36e1-4688-b7f5-ea07361b26a8");
     private boolean ConnectSuccess = true;
 
     private BroadcastReceiver buzzerOnSignalReceiver;
@@ -65,8 +68,8 @@ public class BluetoothService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void startMyOwnForeground() {
         final int SERVICE_NOTIFICATION_ID = 8598001;
-        String NOTIFICATION_CHANNEL_ID = "com.specknet.airrespeck";
-        String channelName = "Airrespeck Bluetooth Service";
+        String NOTIFICATION_CHANNEL_ID = "com.example.circulatio";
+        String channelName = "Circulatio Bluetooth Service";
         NotificationChannel chan = null;
         chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
         chan.setLightColor(Color.BLUE);
@@ -144,7 +147,7 @@ public class BluetoothService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i("BLE", "Got buzzer on message");
-                sendSignal("1");
+                sendSignal("2"); // 1 for led on
             }
         };
         registerReceiver(buzzerOnSignalReceiver, buzzerOn);
@@ -156,7 +159,7 @@ public class BluetoothService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i("BLE", "Got buzzer off message");
-                sendSignal("0");
+                sendSignal("3"); // 0 for led off
             }
         };
         registerReceiver(buzzerOffSignalReceiver, buzzerOff);
@@ -206,10 +209,20 @@ public class BluetoothService extends Service {
         }
     }
 
+    private void Disconnect () {
+        if ( btSocket!=null ) {
+            try {
+                btSocket.close();
+            } catch(IOException e) {
+                Log.i("BLE", "Error on disconnection");
+            }
+        }
+    }
 
     @Override
     public void onDestroy() {
         Log.i("BLUETOOTH", "Service has been stopped");
+        Disconnect();
         super.onDestroy();
 //        unregisterReceiver(buzzerOnSignalReceiver);
 //        unregisterReceiver(buzzerOffSignalReceiver);

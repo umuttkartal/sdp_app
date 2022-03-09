@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InitialSetUp">
+    tools:context=".MassageSetup">
 
     <TextView
         android:id="@+id/CirculatioFrame"
@@ -76,6 +76,8 @@
         android:drawableLeft="@drawable/ic_baseline_bluetooth_24"
         android:text="Connected"
         android:textColor="@color/navy"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         app:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/CirculatioFrame"
         app:layout_constraintEnd_toEndOf="@+id/CirculatioFrame"

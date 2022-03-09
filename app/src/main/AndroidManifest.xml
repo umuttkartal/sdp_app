@@ -27,9 +27,9 @@
         <activity
             android:name=".MassageSetup"
             android:exported="true" />
-        <activity
-            android:name=".HomeScreen"
-            android:exported="true" />
+<!--        <activity-->
+<!--            android:name=".HomeScreen"-->
+<!--            android:exported="true" />-->
         <activity
             android:name=".SetUpInfo"
             android:exported="true" />

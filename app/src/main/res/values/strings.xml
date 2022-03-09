@@ -2,7 +2,7 @@
     <string name="app_name">Circulatio</string>
     <string name="circulatio_logo">Circulatio logo</string>
     <string name="device">Device</string>
-    <string name="tap_to_set_up_circulatio">Tap to set up Circulatio</string>
+    <string name="tap_to_set_up_circulatio">Press here to set up Circulatio</string>
     <string name="what_is_your_name">What is your name?</string>
     <string name="name">Name</string>
     <string name="please_select_your_circulatio">Please select your Circulatio:</string>

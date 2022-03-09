@@ -29,6 +29,8 @@
         android:layout_marginStart="24dp"
         android:text="@string/device"
         android:textColor="@color/black"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
         android:textSize="15sp"
         app:layout_constraintBottom_toTopOf="@+id/CirculatioFrame"
         app:layout_constraintStart_toStartOf="parent" />

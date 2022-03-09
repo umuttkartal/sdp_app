@@ -239,6 +239,9 @@ public class MainActivity extends AppCompatActivity {
         Log.i("DF", "App is being destroyed");
         unregisterReceiver(mReceiver);
 
+        Intent in = new Intent(getApplicationContext(), BluetoothService.class);
+        getApplicationContext().stopService(in);
+
         super.onDestroy();
     }
 }
