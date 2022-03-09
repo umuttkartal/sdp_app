@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     AlertDialog.Builder addBLEOffDialog;
     AlertDialog.Builder addCirculatioNotFoundDialog;
 
+    TextView textViewName;
+
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -111,6 +113,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Setup the part of the layout which is the same for both modes
         setContentView(R.layout.activity_home_screen);
+
+        textViewName = findViewById(R.id.deviceName);
+        User.loadUserData(getApplicationContext());
+        String name = User.getName();
+        name = name + "'s Circulatio";
+        textViewName.setText(name);
 
         btnConnection = findViewById(R.id.bltButton);
 

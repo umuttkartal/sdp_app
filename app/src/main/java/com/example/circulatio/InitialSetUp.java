@@ -24,7 +24,7 @@ public class InitialSetUp extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(InitialSetUp.this, MainActivity.class);
+                Intent i = new Intent(InitialSetUp.this, SetUpInfo.class);
                 startActivity(i);
                 finish();
             }
