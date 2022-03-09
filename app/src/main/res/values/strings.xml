@@ -1,3 +1,64 @@
 <resources>
     <string name="app_name">Circulatio</string>
+    <string name="circulatio_logo">Circulatio logo</string>
+    <string name="device">Device</string>
+    <string name="tap_to_set_up_circulatio">Press here to set up Circulatio</string>
+    <string name="what_is_your_name">What is your name?</string>
+    <string name="name">Name</string>
+    <string name="please_select_your_circulatio">Please select your Circulatio:</string>
+    <string name="please_enter_your_circulatio_pin">Please enter your Circulatio Pin:</string>
+    <string name="submit">submit</string>
+    <string name="confirm_checkbox">You confirm that you have read Circulatio\'s user manual</string>
+    <string name="your_circulatio">Your Circulatio</string>
+    <string name="not_connected">Not connected</string>
+    <string name="connected">Connected</string>
+    <string name="massage">Massage</string>
+    <string name="vibration_type">Vibration Type</string>
+    <string name="massage_speed">Massage Speed</string>
+    <string name="massage_length">Massage Length</string>
+    <string name="start">START</string>
+    <string name="turn_massage_on_off">Turn massage on/off</string>
+    <string name="user_manual">User Manual</string>
+    <string name="user_manual_text"><b>1. Users</b>\n<b>1.1. Target audience</b>\nCirculatio is mainly targeted to people
+        who must sit for extended periods of time without the ability or habits to exercise their
+        legs occasionally. The target user of Circulatio must be in a good health; meaning that users
+        must not belong to any vulnerable groups of people (see the following section <i>1.2 Users outside
+            of target audience</i>) and they must be in full control of themselves.\n\n
+        <b>1.2. Users Outside of Target Audience</b>\nSince Circulatio is not a medical device, it was not
+        tested clinically and hence it should not be used by vulnerable groups of people which
+        specifically include:\n 1. People who cannot identify pain level in their leg.\n
+        2. People with active leg injuries.\n
+        3. Pregnant women.\n
+        4. People younger than 18 years old.\n
+        5. People with severely reduced mental skills.\n
+        If you are not sure whether you are advised to use Circulatio, please consult your doctor or at least
+        talk with a pharmacist.\n\n
+        <b>2. User interaction</b>\n
+        <b>2.1. Core Interaction with the Device</b>\n
+        Circulatio aims to provide an intuitive design which requires minimal interaction with the
+        device itself. Steps to use Circulatio:\n
+        1. Putting the device on.\n
+        2. Adapting the device to your leg size.\n
+        3. (App) Selecting the desired vibration type, intensity and massage length via app.\n
+        4. (App) Pressing the \'Start\' button to start the device.\n
+        5. (App, Optional) Pausing the massage and resuming the massage again.\n
+        6. (App) Pressing the \'Stop\' button which turns the device off and returns it into initial position.\n
+        7. Taking the device off.\n
+        If you need any assistance while using the device, please also show this user manual to the person who assists you.\n\n
+
+        <b>2.2. Physical activity and Circulatio</b>\n
+        Even though Circulatio improves blood circulation, it cannot be used to substitute or reduce
+        healthy physical activity. Users should maintain the same level of physical activity (or ideally
+        increase their physical activity after observing one\'s long sedentary time) which they had
+        before starting to use Circulatio. By physical activity we refer to exercising, walking, running,
+        stretching one\'s legs and other similar activities. These activities not only improve person\'s
+        blood circulation but also provide other health benefits such as strengthen your joins, improve metabolism,
+        reduce risk of various diseases, improve mental health and mood, etc, which Circulatio obviously cannot provide.
+
+    </string>
+    <string name="stop">STOP</string>
+    <string name="pause">PAUSE</string>
+
+    <string name="notification_circulatio_title">Circulatio</string>
+    <string name="notification_circulatio_text">Bluetooth Connection</string>
 </resources>
