@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import java.util.Locale;
+
 /**
  * This class is used to access and interact with information about the user.
  */
@@ -17,25 +19,25 @@ public class User {
     private static boolean manualRead;
 
     public static String getName() {
-        assert(dataLoaded);
+        assert(dataLoaded) : "Data has not been loaded. Programming Error";
 
         return name;
     }
 
     public static String getdeviceID() {
-        assert(dataLoaded);
+        assert(dataLoaded) : "Data has not been loaded. Programming Error";
 
         return deviceID;
     }
 
     public static String getPin() {
-        assert(dataLoaded);
+        assert(dataLoaded) : "Data has not been loaded. Programming Error";
 
         return pin;
     }
 
     public static boolean isManualRead() {
-        assert(dataLoaded);
+        assert(dataLoaded) : "Data has not been loaded. Programming Error";
 
         return manualRead;
     }
@@ -45,14 +47,43 @@ public class User {
      *
      * @param name The name of the user.
      * @param deviceID The Circulatio Device ID
+     * @param pin The Circulatio Device Pin
      * @param manualRead Confirmation User has Read Manual
      * @return True if user data is valid, otherwise false.
+     * @see User#isValidName(String name)
      */
     public static boolean isValidUserData(String name, String deviceID, String pin, boolean manualRead) {
-        boolean validName = !(name == "");
+        boolean validName = isValidName(name);
         boolean validDeviceID = true;
+        boolean validPin = isValidPin(pin);
 
-        return (validName && validDeviceID && manualRead);
+        return (validName && validDeviceID && validPin && manualRead);
+    }
+
+    /**
+     * This method is used to check if the name provided by the user is valid.
+     *
+     * @param name The name of the user.
+     * @return True if the user name is valid, otherwise false.
+     */
+    private static boolean isValidName(String name) {
+        boolean notBlank = !(name == "");
+        boolean noSpaces = !(name.contains(" "));
+
+
+        return notBlank && noSpaces;
+    }
+
+    /**
+     * This method is used to check if the pin provided by the user is valid.
+     *
+     * @param pin The Circulatio Device Pin
+     * @return True if the pin is valid, otherwise false.
+     */
+    private static boolean isValidPin(String pin) {
+        boolean isLengthFive = pin.length() == 5;
+
+        return isLengthFive;
     }
 
     /**
@@ -68,6 +99,8 @@ public class User {
         SharedPreferences sharedPreferences = context.getSharedPreferences(
                 "CirculatioUserData", Context.MODE_PRIVATE);
 
+        name = fixName(name);
+
         Editor editor = sharedPreferences.edit();
         editor.putString("name", name);
         editor.putString("deviceID",deviceID);
@@ -76,6 +109,16 @@ public class User {
         editor.commit();
 
         loadUserData(context);
+    }
+
+    /**
+     * Capitalise the first letter of the name then makes the rest lowercase.
+     *
+     * @param name The name of the user.
+     * @return The fixed name.
+     */
+    private static String fixName(String name) {
+        return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
     }
 
     /**
