@@ -62,4 +62,5 @@
     <string name="notification_circulatio_title">Circulatio</string>
     <string name="notification_circulatio_text">Bluetooth Connection</string>
     <string name="start_massage">Start massage</string>
+    <string name="stop_massage_button">Stop massage</string>
 </resources>

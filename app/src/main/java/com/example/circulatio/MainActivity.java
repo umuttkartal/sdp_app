@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private Utils mUtils;
     BluetoothManager bluetoothManager;
     Button btnConnection;
+    Button startButton;
     AlertDialog.Builder addBLEOffDialog;
     AlertDialog.Builder addCirculatioNotFoundDialog;
 
@@ -122,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
 
         btnConnection = findViewById(R.id.bltButton);
 
+        startButton = findViewById(R.id.btnStartMassage1);
+        startButton.setEnabled(mIsCirculatioConnected);
 
         // Load connection state
         if (mSavedInstanceState != null) {
@@ -157,25 +160,22 @@ public class MainActivity extends AppCompatActivity {
                         dialog.cancel();
                     }});
 
-        SwitchCompat switch1 = findViewById(R.id.switch1);
-        switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
+        startButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                if(mIsCirculatioConnected) {
-                    if (isChecked) {
-                        Intent intent = new Intent();
-                        intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_ON);
-                        // Data you need to pass to activity
-                        getApplicationContext().sendBroadcast(intent);
-
-                    } else {
-                        Intent intent = new Intent();
-                        intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_OFF);
-                        // Data you need to pass to activity
-                        getApplicationContext().sendBroadcast(intent);
-                    }
+            public void onClick(View view) {
+                if (mIsCirculatioConnected && startButton.getText().equals(getString(R.string.start_massage))) {
+                    startButton.setText(R.string.stop_massage_button);
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_ON);
+                    // Data you need to pass to activity
+                    getApplicationContext().sendBroadcast(intent);
+                }
+                else if (mIsCirculatioConnected && startButton.getText().equals(getString(R.string.stop_massage_button))) {
+                    startButton.setText(R.string.start_massage);
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_OFF);
+                    // Data you need to pass to activity
+                    getApplicationContext().sendBroadcast(intent);
                 }
             }
         });
@@ -209,8 +209,12 @@ public class MainActivity extends AppCompatActivity {
                             if(!mIsCirculatioConnected){
                                 addCirculatioNotFoundDialog.show();
                             }
+                            else {
+                                startButton.setEnabled(true);
+                            }
                         }
                     }, 2000);
+
                 }
             }
         });
