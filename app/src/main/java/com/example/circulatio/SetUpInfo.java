@@ -2,8 +2,11 @@ package com.example.circulatio;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -16,13 +19,17 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Set;
+
 /**
  * This class control the Setup Info Screen.
  */
 public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
 
-    private String[] deviceList = {"Circulatio Device"};
+//    private String[] deviceList = {"Circulatio Device"};
+    private ArrayList<String> deviceList = new ArrayList<>();
 
     private EditText textEnterName;
     private Spinner spinnerBluetoothDevice;
@@ -30,6 +37,14 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
     private CheckBox checkboxUserManual;
     private Button buttonSubmit;
 
+    private BluetoothAdapter myBluetooth = null;
+    private Set<BluetoothDevice> pairedDevices;
+
+    private ArrayList<String> addressList = new ArrayList<>();
+
+    private String deviceAddress = null;
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_up_info);
@@ -41,9 +56,33 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
         this.buttonSubmit = findViewById(R.id.btn_submit_setup_info);
 
         spinnerBluetoothDevice.setOnItemSelectedListener(this);
-        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,deviceList);
+
+        myBluetooth = BluetoothAdapter.getDefaultAdapter();
+        if ( myBluetooth==null ) {
+            Toast.makeText(getApplicationContext(), "Bluetooth device not available", Toast.LENGTH_LONG).show();
+            finish();
+        }
+        else if ( !myBluetooth.isEnabled() ) {
+            Intent turnBTon = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(turnBTon, 1);
+        }
+
+        pairedDevices = myBluetooth.getBondedDevices();
+//        ArrayList list = new ArrayList();
+
+        if ( pairedDevices.size() > 0 ) {
+            for ( BluetoothDevice bt : pairedDevices ) {
+                deviceList.add(bt.getName().toString());
+                addressList.add(bt.getAddress().toString());
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
+        }
+
+        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item, deviceList);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerBluetoothDevice.setAdapter(aa);
+
 
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
 
@@ -67,7 +106,8 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
 
     @Override
     public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-        Toast.makeText(getApplicationContext(),deviceList[position] , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), deviceList.get(position), Toast.LENGTH_LONG).show();
+        deviceAddress = addressList.get(position);
     }
 
     @Override
@@ -79,5 +119,12 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
         ImageButton button = (ImageButton) findViewById(R.id.buttonInfo1);
         Animation startAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking_animation_not_repeated);
         button.startAnimation(startAnimation);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 }
