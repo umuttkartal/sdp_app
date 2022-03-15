@@ -2,8 +2,10 @@ package com.example.circulatio;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +48,10 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
 
     private String selectedDevice = null;
 
+    AlertDialog.Builder wrongInputDialog;
+
+    AlertDialog.Builder wrongDeviceDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +63,30 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
         this.checkboxUserManual = findViewById(R.id.checkbox_user_manual);
         this.buttonSubmit = findViewById(R.id.btn_submit_setup_info);
 
+        ImageButton btnInfo =  findViewById(R.id.buttonInfo1);
+        btnInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View v) {
+                Intent inn1=getIntent();
+                inn1=new Intent(SetUpInfo.this,UserManual.class);
+                startActivity(inn1);
+            }
+        });
 
 
+        wrongInputDialog = new AlertDialog.Builder(this).setTitle("Wrong Input")
+                .setMessage("Please ensure you entered correct information")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }});
+
+        wrongDeviceDialog = new AlertDialog.Builder(this).setTitle("Wrong Device Selected")
+                .setMessage("Please ensure you picked the right device")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }});
 
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
 
@@ -76,8 +104,16 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
                     startActivity(i);
                     finish();
                 }
+                else if(User.isValidUserData(name, deviceId, pin, userManual) && !selectedDevice.contains("Circulatio")){
+
+                    wrongDeviceDialog.show();
+                }
+                else{
+                    wrongInputDialog.show();
+                }
             }
         });
+
     }
 
     @Override
