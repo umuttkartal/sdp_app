@@ -29,8 +29,8 @@ import java.util.UUID;
 public class BluetoothService extends Service {
     private BluetoothAdapter mBluetoothAdapter;
     String addressHC = "98:D3:32:31:30:0F";
-    String address = "84:CC:A8:11:F5:72";
-
+//    String address = "84:CC:A8:11:F5:72";
+    String address = "84:CC:A8:12:0D:E6";
     private ProgressDialog progress;
     BluetoothAdapter myBluetooth = null;
     static BluetoothSocket btSocket = null;
@@ -147,7 +147,7 @@ public class BluetoothService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i("BLE", "Got buzzer on message");
-                sendSignal("2"); // 1 for led on
+                sendSignal("1"); // 1 for led on, 2 for buzzer on
             }
         };
         registerReceiver(buzzerOnSignalReceiver, buzzerOn);
@@ -159,7 +159,7 @@ public class BluetoothService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i("BLE", "Got buzzer off message");
-                sendSignal("3"); // 0 for led off
+                sendSignal("0"); // 0 for led off, 3 for buzzer off
             }
         };
         registerReceiver(buzzerOffSignalReceiver, buzzerOff);

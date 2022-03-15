@@ -44,6 +44,8 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
 
     private String deviceAddress = null;
 
+    private String selectedDevice = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +96,7 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
                 String pin = textEnterPin.getText().toString();
                 boolean userManual = checkboxUserManual.isChecked();
 
-                if (User.isValidUserData(name, deviceId, pin, userManual)) {
+                if (User.isValidUserData(name, deviceId, pin, userManual) && selectedDevice.contains("Circulatio")) {
                     User.createUser(name, deviceId, pin, userManual, getApplicationContext());
                     Intent i = new Intent(SetUpInfo.this, MainActivity.class);
                     startActivity(i);
@@ -108,6 +110,7 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
     public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
         Toast.makeText(getApplicationContext(), deviceList.get(position), Toast.LENGTH_LONG).show();
         deviceAddress = addressList.get(position);
+        selectedDevice = deviceList.get(position);
     }
 
     @Override
