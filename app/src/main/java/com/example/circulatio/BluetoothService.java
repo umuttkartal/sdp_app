@@ -147,7 +147,7 @@ public class BluetoothService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i("BLE", "Got buzzer on message");
-                sendSignal("1"); // 1 for led on, 2 for buzzer on
+                sendSignal("2"); // 1 for led on, 2 for buzzer on
             }
         };
         registerReceiver(buzzerOnSignalReceiver, buzzerOn);
@@ -159,7 +159,7 @@ public class BluetoothService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i("BLE", "Got buzzer off message");
-                sendSignal("0"); // 0 for led off, 3 for buzzer off
+                sendSignal("3"); // 0 for led off, 3 for buzzer off
             }
         };
         registerReceiver(buzzerOffSignalReceiver, buzzerOff);
