@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
                 //Do something if connected
                 btnConnection.setText(R.string.connected);
+                btnConnection.setTextColor(getApplication().getResources().getColor(R.color.circulatio_green));
                 mIsCirculatioConnected = true;
                 startButton.setEnabled(true);
                 Log.i("BLT", "Bluetooth connected...");
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
                 //Do something if disconnected
                 btnConnection.setText(R.string.not_connected);
+                btnConnection.setTextColor(getApplication().getResources().getColor(R.color.red));
                 mIsCirculatioConnected = false;
                 startButton.setEnabled(false);
                 Log.i("BLT", "Bluetooth disconnected...");
@@ -255,9 +257,10 @@ public class MainActivity extends AppCompatActivity {
 
         Boolean isTouched = false;
 
-        if(mIsCirculatioConnected){
-            btnConnection.setText(R.string.connected);
-        }
+//        if(mIsCirculatioConnected){
+//            btnConnection.setText(R.string.connected);
+//            btnConnection.setTextColor(getApplication().getResources().getColor(R.color.circulatio_green));
+//        }
     }
 
     @Override
