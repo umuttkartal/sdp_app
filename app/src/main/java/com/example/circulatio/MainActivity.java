@@ -66,12 +66,14 @@ public class MainActivity extends AppCompatActivity {
                 //Do something if connected
                 btnConnection.setText(R.string.connected);
                 mIsCirculatioConnected = true;
+                startButton.setEnabled(true);
                 Log.i("BLT", "Bluetooth connected...");
             }
             else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
                 //Do something if disconnected
                 btnConnection.setText(R.string.not_connected);
                 mIsCirculatioConnected = false;
+                startButton.setEnabled(false);
                 Log.i("BLT", "Bluetooth disconnected...");
             }
         }
@@ -124,7 +126,9 @@ public class MainActivity extends AppCompatActivity {
         btnConnection = findViewById(R.id.bltButton);
 
         startButton = findViewById(R.id.btnStartMassage1);
-        startButton.setEnabled(mIsCirculatioConnected);
+        startButton.setEnabled(false);
+
+//        startButton.setEnabled(mIsCirculatioConnected);
 
         // Load connection state
         if (mSavedInstanceState != null) {
