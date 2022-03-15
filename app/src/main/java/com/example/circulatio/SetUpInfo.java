@@ -57,33 +57,7 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
         this.checkboxUserManual = findViewById(R.id.checkbox_user_manual);
         this.buttonSubmit = findViewById(R.id.btn_submit_setup_info);
 
-        spinnerBluetoothDevice.setOnItemSelectedListener(this);
 
-        myBluetooth = BluetoothAdapter.getDefaultAdapter();
-        if ( myBluetooth==null ) {
-            Toast.makeText(getApplicationContext(), "Bluetooth device not available", Toast.LENGTH_LONG).show();
-            finish();
-        }
-        else if ( !myBluetooth.isEnabled() ) {
-            Intent turnBTon = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(turnBTon, 1);
-        }
-
-        pairedDevices = myBluetooth.getBondedDevices();
-//        ArrayList list = new ArrayList();
-
-        if ( pairedDevices.size() > 0 ) {
-            for ( BluetoothDevice bt : pairedDevices ) {
-                deviceList.add(bt.getName().toString());
-                addressList.add(bt.getAddress().toString());
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
-        }
-
-        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item, deviceList);
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerBluetoothDevice.setAdapter(aa);
 
 
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +102,33 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
     @Override
     protected void onResume() {
         super.onResume();
+        
+        spinnerBluetoothDevice.setOnItemSelectedListener(this);
 
+        myBluetooth = BluetoothAdapter.getDefaultAdapter();
+        if ( myBluetooth==null ) {
+            Toast.makeText(getApplicationContext(), "Bluetooth device not available", Toast.LENGTH_LONG).show();
+            finish();
+        }
+        else if ( !myBluetooth.isEnabled() ) {
+            Intent turnBTon = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(turnBTon, 1);
+        }
+
+        pairedDevices = myBluetooth.getBondedDevices();
+//        ArrayList list = new ArrayList();
+
+        if ( pairedDevices.size() > 0 ) {
+            for ( BluetoothDevice bt : pairedDevices ) {
+                deviceList.add(bt.getName().toString());
+                addressList.add(bt.getAddress().toString());
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
+        }
+
+        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item, deviceList);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerBluetoothDevice.setAdapter(aa);
     }
 }

@@ -79,6 +79,22 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private void startBluetoothCheckTask() {
+        final Handler h = new Handler();
+        final int delay = 5000; // milliseconds
+
+        h.postDelayed(new Runnable() {
+            public void run() {
+                // Open request for bluetooth if turned off
+                if (!mBluetoothAdapter.isEnabled()) {
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBtIntent, 1);
+                }
+                h.postDelayed(this, delay);
+            }
+        }, 0);
+    }
+
     public void blinkBLTButton(View view) {
         Animation startAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking_animation_not_repeated);
         btnConnection.startAnimation(startAnimation);
@@ -143,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
         mBluetoothAdapter = bluetoothManager.getAdapter();
 
+        startBluetoothCheckTask();
         startCirculatioService();
 
         IntentFilter filter1 = new IntentFilter();
@@ -241,7 +258,6 @@ public class MainActivity extends AppCompatActivity {
         if(mIsCirculatioConnected){
             btnConnection.setText(R.string.connected);
         }
-
     }
 
     @Override
