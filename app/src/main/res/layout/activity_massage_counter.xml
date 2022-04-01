@@ -7,7 +7,7 @@
     tools:context=".MassageCounter">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/pauseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pause"
@@ -18,11 +18,11 @@
         android:paddingLeft="40dp"
         android:background="@drawable/custom_button4"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintEnd_toStartOf="@+id/stopButton"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/stopButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/stop"
@@ -34,7 +34,7 @@
         android:background="@drawable/custom_button2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button"/>
+        app:layout_constraintStart_toEndOf="@+id/pauseButton"/>
 
     <TextView
         android:id="@+id/textCountdown"
