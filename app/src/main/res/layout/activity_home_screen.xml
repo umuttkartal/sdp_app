@@ -29,9 +29,7 @@
         android:layout_marginStart="24dp"
         android:text="@string/device"
         android:textColor="@color/black"
-        android:paddingRight="20dp"
-        android:paddingLeft="20dp"
-        android:textSize="15sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/CirculatioFrame"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -39,14 +37,31 @@
         android:id="@+id/buttonInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
         android:background="#0000"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
+        android:minWidth="40dp"
+        android:minHeight="40dp"
+        android:layout_marginEnd="25dp"
         android:src="@drawable/ic_baseline_info_24"
         app:layout_constraintBottom_toTopOf="@+id/CirculatioFrame"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/CirculatioFrame"
         tools:ignore="SpeakableTextPresentCheck" />
+
+    <Button
+        android:id="@+id/ellipsis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_button5"
+        android:text="@string/vertical_ellipsis"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="5dp"
+        android:minWidth="26dp"
+        android:minHeight="26dp"
+        app:layout_constraintBottom_toTopOf="@+id/CirculatioFrame"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonInfo"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/deviceName"
@@ -70,9 +85,10 @@
         android:layout_width="116dp"
         android:layout_height="120dp"
         android:layout_marginStart="18dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="@+id/CirculatioFrame"
         app:layout_constraintTop_toTopOf="@+id/CirculatioFrame"
-        app:srcCompat="@drawable/device_rb" />
+        app:srcCompat="@drawable/logo" />
 
     <Button
         android:id="@+id/bltButton"
@@ -88,6 +104,56 @@
         app:layout_constraintEnd_toEndOf="@+id/CirculatioFrame"
         app:layout_constraintStart_toEndOf="@+id/imageView" />
 
+    <TextView
+        android:id="@+id/AddOnTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/add_on_readings"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CirculatioFrame" />
+
+    <TextView
+        android:id="@+id/AddOnFrame"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/border1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/AddOnTitle"
+        tools:ignore="OnClick,SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/yourPosition"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxLines="1"
+        android:layout_marginStart="20dp"
+        android:text="Your position: "
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="@+id/AddOnFrame"
+        app:layout_constraintStart_toStartOf="@+id/AddOnFrame"
+        app:layout_constraintTop_toTopOf="@+id/AddOnFrame" />
+
+    <ImageView
+        android:id="@+id/manPositionImage"
+        android:layout_width="116dp"
+        android:layout_height="120dp"
+        app:layout_constraintBottom_toBottomOf="@+id/AddOnFrame"
+        app:layout_constraintEnd_toEndOf="@+id/AddOnFrame"
+        app:layout_constraintStart_toEndOf="@+id/yourPosition"
+        app:layout_constraintTop_toTopOf="@+id/AddOnFrame"
+        app:srcCompat="@drawable/man_sitting_on_chair_silhouette" />
+
     <Button
         android:id="@+id/btnStartMassage1"
         android:layout_width="wrap_content"
@@ -97,12 +163,12 @@
         android:layout_marginBottom="50dp"
         android:background="@drawable/btn_selector"
         android:paddingLeft="100dp"
-        android:paddingTop="30dp"
+        android:paddingTop="18dp"
         android:paddingRight="100dp"
-        android:paddingBottom="30dp"
+        android:paddingBottom="18dp"
         android:text="@string/start_massage"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

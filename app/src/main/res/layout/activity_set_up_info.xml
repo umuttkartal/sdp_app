@@ -96,7 +96,89 @@
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_weight="15"/>
+        android:layout_weight="1"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:text="@string/will_you_be_using_an_add_on"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        />
+
+    <Spinner
+        android:id="@+id/add_on_yes_no"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:text="@string/select_your_add_on"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:visibility="invisible"
+        />
+
+    <Spinner
+        android:id="@+id/bluetooth_devices_spinner2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        android:visibility="invisible"/>
+
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:text="@string/enter_pin_of_your_add_on"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:visibility="invisible"
+        />
+
+    <EditText
+        android:id="@+id/enter_pin2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="5dp"
+        android:inputType="number"
+        android:maxLength="20"
+        android:maxLines="1"
+        android:visibility="invisible"/>
+
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="10"/>
 
 
     <CheckBox
@@ -117,6 +199,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
+        android:layout_marginBottom="24dp"
         android:text="@string/submit"
         android:background="@drawable/custom_button2"
         android:textColor="@color/white"

@@ -14,10 +14,10 @@
     <string name="circulatio_logo">Circulatio logo</string>
     <string name="device">Device</string>
     <string name="tap_to_set_up_circulatio">Press here to set up Circulatio</string>
-    <string name="what_is_your_name">Please enter your first name:</string>
+    <string name="what_is_your_name">Enter your first name:</string>
     <string name="name">Name</string>
-    <string name="please_select_your_circulatio">Please select your Circulatio:</string>
-    <string name="please_enter_your_circulatio_pin">Please enter your Circulatio Pin:</string>
+    <string name="please_select_your_circulatio">Select your Circulatio:</string>
+    <string name="please_enter_your_circulatio_pin">Enter PIN of your Circulatio:</string>
     <string name="submit">submit</string>
     <string name="confirm_checkbox">You confirm that you have read Circulatio\'s user manual</string>
     <string name="your_circulatio">Your Circulatio</string>
@@ -72,6 +72,13 @@
 
     <string name="notification_circulatio_title">Circulatio</string>
     <string name="notification_circulatio_text">Bluetooth Connection</string>
-    <string name="start_massage">Start massage</string>
+    <string name="start_massage">Set up massage</string>
     <string name="stop_massage_button">Stop massage</string>
+    <string name="will_you_be_using_an_add_on">Will you be using an add-on?</string>
+    <string name="enter_pin_of_your_add_on">Enter PIN of your add-on:</string>
+    <string name="select_your_add_on">Select your add-on:</string>
+    <string name="vertical_ellipsis">&#8942;</string>
+    <string name="add_on_readings">Add-on readings</string>
+    <string name="select_the_recommended_massage">Select the recommended massage</string>
+    <string name="connected">Connected</string>
 </resources>
