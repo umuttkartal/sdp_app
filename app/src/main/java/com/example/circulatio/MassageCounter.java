@@ -35,6 +35,10 @@ public class MassageCounter extends AppCompatActivity {
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String message = MassageController.StopMessage();
+
+                //send stop message via bluetooth
+
                 Intent i = new Intent(MassageCounter.this, MainActivity.class);
                 startActivity(i);
                 finish();
