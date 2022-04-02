@@ -39,6 +39,10 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
     private CheckBox checkboxUserManual;
     private Button buttonSubmit;
 
+    public static boolean useAddOn = false;
+
+    private Spinner spinnerUseAddOn;
+
     private BluetoothAdapter myBluetooth = null;
     private Set<BluetoothDevice> pairedDevices;
 
@@ -62,6 +66,7 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
         this.textEnterPin =  findViewById(R.id.enter_pin);
         this.checkboxUserManual = findViewById(R.id.checkbox_user_manual);
         this.buttonSubmit = findViewById(R.id.btn_submit_setup_info);
+        this.spinnerUseAddOn = findViewById(R.id.add_on_yes_no);
 
         ImageButton btnInfo =  findViewById(R.id.buttonInfo1);
         btnInfo.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +101,9 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
                 String name = textEnterName.getText().toString();
                 String deviceId = "";//spinnerBluetoothDevice.getText().toString();
                 String pin = textEnterPin.getText().toString();
+                String useAddOnVal = spinnerUseAddOn.getSelectedItem().toString();
+                useAddOn = useAddOnVal.equals("Yes");
+
                 boolean userManual = checkboxUserManual.isChecked();
 
                 if (User.isValidUserData(name, deviceId, pin, userManual) && selectedDevice.contains("Circulatio")) {
@@ -166,5 +174,10 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
         ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item, deviceList);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerBluetoothDevice.setAdapter(aa);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.addOnOptions, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinnerUseAddOn.setAdapter(adapter);
     }
 }

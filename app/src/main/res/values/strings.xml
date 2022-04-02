@@ -81,4 +81,9 @@
     <string name="add_on_readings">Add-on readings</string>
     <string name="select_the_recommended_massage">Select the recommended massage</string>
     <string name="or">OR</string>
+
+    <string-array name="addOnOptions">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
 </resources>

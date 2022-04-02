@@ -31,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,8 +55,12 @@ public class MainActivity extends AppCompatActivity {
     Button startButton;
     AlertDialog.Builder addBLEOffDialog;
     AlertDialog.Builder addCirculatioNotFoundDialog;
+    private BroadcastReceiver sittingReceiver;
+    private BroadcastReceiver standingReceiver;
+    private BroadcastReceiver notifReceiver;
 
     TextView textViewName;
+    ImageView activityType;
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -140,6 +145,9 @@ public class MainActivity extends AppCompatActivity {
         String name = User.getName();
         name = name + "'s Circulatio";
         textViewName.setText(name);
+
+        activityType = findViewById(R.id.manPositionImage);
+        initReceivers();
 
         btnConnection = findViewById(R.id.bltButton);
 
@@ -246,6 +254,33 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateCirculatioConnection(boolean isConnected) {
         mIsCirculatioConnected = isConnected;
+    }
+
+    private void initReceivers(){
+        final IntentFilter sittingIntent = new IntentFilter();
+        sittingIntent.addAction(Constants.ACTION_USER_SITTING);
+        sittingReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i("BLE", "Got sitting message");
+                activityType.setImageResource(R.drawable.man_sitting_on_chair_silhouette);
+            }
+        };
+        registerReceiver(sittingReceiver, sittingIntent);
+
+        final IntentFilter standingIntent = new IntentFilter();
+        standingIntent.addAction(Constants.ACTION_USER_STANDING);
+        standingReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i("BLE", "Got standing message");
+                activityType.setImageResource(R.drawable.man_standing_silhouette);
+            }
+        };
+        registerReceiver(standingReceiver, standingIntent);
+
     }
 
 
