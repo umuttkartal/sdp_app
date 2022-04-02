@@ -81,6 +81,10 @@
     <string name="add_on_readings">Add-on readings</string>
     <string name="select_the_recommended_massage">Select the recommended massage</string>
     <string name="or">OR</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
 
     <string-array name="addOnOptions">
         <item>Yes</item>

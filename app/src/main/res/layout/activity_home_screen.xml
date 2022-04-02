@@ -58,6 +58,7 @@
         android:layout_marginTop="5dp"
         android:minWidth="26dp"
         android:minHeight="26dp"
+        android:onClick="showMenu"
         app:layout_constraintBottom_toTopOf="@+id/CirculatioFrame"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonInfo"

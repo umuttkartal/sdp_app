@@ -23,6 +23,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -33,6 +35,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -131,6 +134,36 @@ public class MainActivity extends AppCompatActivity {
             Log.i("Main Activity", "Circulatio Bluetooth service already running. Don't start it again.");
         }
         return alreadyRunning;
+    }
+
+    public void showMenu(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.ellipsis_menu, popup.getMenu());
+        popup.show();
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if(menuItem.getItemId() == R.id.connect) {
+                    // TODO
+                    return true;
+                }
+                else if (menuItem.getItemId() == R.id.disconnect) {
+                    // TODO
+                    return true;
+                }
+                else if (menuItem.getItemId() == R.id.rename) {
+                    // TODO
+                    return true;
+                }
+                else if (menuItem.getItemId() == R.id.delete) {
+                    // TODO
+                    return true;
+                }
+
+                return false;
+            }
+        });
     }
 
     @SuppressLint("MissingPermission")
