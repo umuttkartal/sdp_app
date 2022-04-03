@@ -305,7 +305,33 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
                 else if (menuItem.getItemId() == R.id.delete) {
-                    // TODO
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+                    builder.setTitle("Are you sure?");
+                    builder.setMessage("After deleting the massaging device, you will be required to complete the initial set up again.");
+
+                    builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int which) {
+                            User.deleteUserData(MainActivity.this);
+
+                            Intent i=getIntent();
+                            i=new Intent(MainActivity.this, InitialSetUp.class);
+                            startActivity(i);
+                            // TODO: destroy the previous activity, how?
+                        }
+                    });
+
+                    builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
                     return true;
                 }
 
