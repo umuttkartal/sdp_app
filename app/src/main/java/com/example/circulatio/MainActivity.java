@@ -31,6 +31,7 @@ import android.os.PowerManager;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -259,14 +260,17 @@ public class MainActivity extends AppCompatActivity {
                     btnConnection.setTextColor(getApplication().getResources().getColor(R.color.red));
                 }
                 else if (menuItem.getItemId() == R.id.rename) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(
-                            MainActivity.this);
-                    alert.setTitle("Enter new name");
+                    LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+                    View dialoglayout = inflater.inflate(R.layout.edit_text, null);
 
-                    final EditText input = new EditText(MainActivity.this);
-                    input.setFilters(new InputFilter[] {new InputFilter.LengthFilter(20)});
-                    alert.setView(input);
-                    alert.setMessage("Please ensure new name contains no invalid characters including whitespaces.");
+                    AlertDialog.Builder alert = new AlertDialog.Builder(
+                            MainActivity.this)
+                            .setTitle("Enter new name")
+                            .setMessage("Please make sure new name contains no invalid characters including whitespaces.");
+
+                    alert.setView(dialoglayout);
+
+                    final EditText input = (EditText) dialoglayout.findViewById(R.id.edit_name);
 
                     alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
@@ -279,6 +283,13 @@ public class MainActivity extends AppCompatActivity {
                             name = name + "'s Circulatio";
                             textViewName.setText(name);
 
+                            if (changed) {
+                                Toast.makeText(getApplicationContext(), "Name successfully changed", Toast.LENGTH_LONG).show();
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(), "ERROR! Please enter a valid name", Toast.LENGTH_LONG).show();
+                            }
+
                         }
                     });
 
@@ -288,6 +299,7 @@ public class MainActivity extends AppCompatActivity {
                                     dialog.cancel();
                                 }
                             });
+
                     AlertDialog alertDialog = alert.create();
                     alertDialog.show();
                     return true;

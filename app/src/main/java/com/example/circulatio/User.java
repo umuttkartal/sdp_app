@@ -91,7 +91,7 @@ public class User {
         boolean noSpaces = !(name.contains(" "));
 
 
-        return notBlank && noSpaces;
+        return notBlank && noSpaces && name.length() < 21;
     }
 
     /**
