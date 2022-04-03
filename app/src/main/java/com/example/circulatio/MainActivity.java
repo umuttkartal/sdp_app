@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
     TextView textViewName;
     TextView addOnView;
     ImageView activityType;
-    Menu ellipsisMenu;
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -277,7 +276,6 @@ public class MainActivity extends AppCompatActivity {
         String name = User.getName();
         name = name + "'s Circulatio";
         textViewName.setText(name);
-        ellipsisMenu = findViewById(R.menu.ellipsis_menu);
 
 
 //        startButton.setEnabled(mIsCirculatioConnected);
@@ -331,16 +329,26 @@ public class MainActivity extends AppCompatActivity {
         });
         addOnView = findViewById(R.id.yourPosition);
 
-        if(mIsAddOnConnected){
-            addOnView.setVisibility(View.VISIBLE);
-            activityType.setVisibility(View.VISIBLE);
-            addOnButton.setVisibility(View.GONE);
+        if(SetUpInfo.useAddOn) {
+            if (mIsAddOnConnected) {
+                addOnView.setVisibility(View.VISIBLE);
+                activityType.setVisibility(View.VISIBLE);
+                addOnButton.setVisibility(View.GONE);
+            } else {
+                addOnView.setVisibility(View.GONE);
+                activityType.setVisibility(View.GONE);
+                addOnButton.setVisibility(View.VISIBLE);
+            }
+            initReceivers();
         }else{
             addOnView.setVisibility(View.GONE);
             activityType.setVisibility(View.GONE);
-            addOnButton.setVisibility(View.VISIBLE);
+            addOnButton.setVisibility(View.GONE);
+            TextView tView = findViewById(R.id.AddOnTitle);
+            tView.setVisibility(View.GONE);
+            TextView addOnFrame = findViewById(R.id.AddOnFrame);
+            addOnFrame.setVisibility(View.GONE);
         }
-        initReceivers();
 
         btnConnection = findViewById(R.id.bltButton);
 
