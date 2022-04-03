@@ -4,12 +4,19 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.371875" />
+        <entry key="app/src/main/res/drawable/border1.xml" value="0.371875" />
+        <entry key="app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.371875" />
+        <entry key="app/src/main/res/drawable/ic_baseline_info_32.xml" value="0.371875" />
+        <entry key="app/src/main/res/drawable/ic_baseline_more_vert_32.xml" value="0.371875" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.371875" />
         <entry key="app/src/main/res/layout/activity_ar_measure.xml" value="0.35572916666666665" />
-        <entry key="app/src/main/res/layout/activity_home_screen.xml" value="0.18958333333333333" />
+        <entry key="app/src/main/res/layout/activity_home_screen.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.340625" />
+        <entry key="app/src/main/res/layout/activity_massage_counter.xml" value="0.19927536231884058" />
+        <entry key="app/src/main/res/layout/activity_massage_setup.xml" value="0.2028985507246377" />
         <entry key="app/src/main/res/layout/activity_set_up_info.xml" value="0.35572916666666665" />
         <entry key="app/src/main/res/layout/ble_act.xml" value="0.35572916666666665" />
+        <entry key="app/src/main/res/layout/device_frame.xml" value="0.35572916666666665" />
         <entry key="app/src/main/res/menu/ellipsis_menu.xml" value="0.35572916666666665" />
       </map>
     </option>

@@ -13,6 +13,9 @@ public class Constants {
     public static final String ACTION_CIRCULATIO_RECONNECT =
             "com.example.circulatio.CIRCULATIO_RECONNECT";
 
+    public static final String ACTION_CIRCULATIO_DISCONNECT =
+            "com.example.circulatio.CIRCULATIO_DISCONNECT";
+
     public static final String ACTION_USER_SITTING =
             "com.example.circulatio.ACTION_USER_SITTING";
 
@@ -21,5 +24,8 @@ public class Constants {
 
     public static final String ACTION_MASSAGE_NOTIF =
             "com.example.circulatio.ACTION_MASSAGE_NOTIF";
+
+    public static final String ACTION_ADDON_RECONNECT =
+            "com.example.circulatio.ADDON_RECONNECT";
 
 }

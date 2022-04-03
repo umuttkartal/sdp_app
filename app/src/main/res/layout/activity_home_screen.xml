@@ -4,118 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".InitialSetUp">
 
-    <TextView
-        android:id="@+id/CirculatioFrame"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginRight="24dp"
-        android:background="@drawable/border1"
-        android:onClick="blinkBLTButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="OnClick,SpeakableTextPresentCheck" />
-
-    <TextView
-        android:id="@+id/CirculatioName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="24dp"
-        android:text="@string/device"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/CirculatioFrame"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageButton
-        android:id="@+id/buttonInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#0000"
-        android:minWidth="40dp"
-        android:minHeight="40dp"
-        android:layout_marginEnd="25dp"
-        android:src="@drawable/ic_baseline_info_24"
-        app:layout_constraintBottom_toTopOf="@+id/CirculatioFrame"
-        app:layout_constraintEnd_toEndOf="@+id/CirculatioFrame"
-        tools:ignore="SpeakableTextPresentCheck" />
-
-    <Button
-        android:id="@+id/ellipsis"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/custom_button5"
-        android:text="@string/vertical_ellipsis"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="5dp"
-        android:minWidth="26dp"
-        android:minHeight="26dp"
-        android:onClick="showMenu"
-        app:layout_constraintBottom_toTopOf="@+id/CirculatioFrame"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonInfo"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/deviceName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:text="@string/your_circulatio"
-        android:gravity="center"
-        android:maxLines="2"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="28sp"
-        app:layout_constraintEnd_toEndOf="@+id/CirculatioFrame"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="@+id/CirculatioFrame" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="116dp"
-        android:layout_height="120dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="@+id/CirculatioFrame"
-        app:layout_constraintTop_toTopOf="@+id/CirculatioFrame"
-        app:srcCompat="@drawable/logo" />
-
-    <Button
-        android:id="@+id/bltButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/custom_button1"
-        android:drawableLeft="@drawable/ic_baseline_bluetooth_24"
-        android:text="@string/not_connected"
-        android:textColor="@color/red"
-        app:backgroundTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/CirculatioFrame"
-        app:layout_constraintEnd_toEndOf="@+id/CirculatioFrame"
-        app:layout_constraintStart_toEndOf="@+id/imageView" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/device_frame" />
 
     <TextView
         android:id="@+id/AddOnTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
         android:text="@string/add_on_readings"
         android:textColor="@color/black"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/CirculatioFrame" />
+        app:layout_constraintStart_toStartOf="@+id/include"
+        app:layout_constraintTop_toBottomOf="@+id/include" />
 
     <TextView
         android:id="@+id/AddOnFrame"
@@ -130,6 +36,25 @@
         app:layout_constraintTop_toBottomOf="@+id/AddOnTitle"
         tools:ignore="OnClick,SpeakableTextPresentCheck" />
 
+    <Button
+        android:id="@+id/addOnButton"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/border1"
+        android:gravity="center"
+        android:maxLines="2"
+        android:text="@string/addOnConnect"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/AddOnTitle"/>
+
     <TextView
         android:id="@+id/yourPosition"
         android:layout_width="0dp"
@@ -141,19 +66,21 @@
         android:textAllCaps="false"
         android:textColor="@color/black"
         android:textSize="28sp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/AddOnFrame"
         app:layout_constraintStart_toStartOf="@+id/AddOnFrame"
         app:layout_constraintTop_toTopOf="@+id/AddOnFrame" />
 
     <ImageView
         android:id="@+id/manPositionImage"
-        android:layout_width="116dp"
-        android:layout_height="120dp"
+        android:layout_width="101dp"
+        android:layout_height="99dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/AddOnFrame"
         app:layout_constraintEnd_toEndOf="@+id/AddOnFrame"
         app:layout_constraintStart_toEndOf="@+id/yourPosition"
         app:layout_constraintTop_toTopOf="@+id/AddOnFrame"
-        app:srcCompat="@drawable/man_sitting_on_chair_silhouette" />
+        app:srcCompat="@drawable/man_standing_silhouette" />
 
     <Button
         android:id="@+id/btnStartMassage1"

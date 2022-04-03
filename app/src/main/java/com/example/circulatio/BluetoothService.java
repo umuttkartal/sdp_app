@@ -15,9 +15,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -35,26 +37,32 @@ public class BluetoothService extends Service {
     String addOnAddress = "A8:03:2A:EC:50:C2";
     private ProgressDialog progress;
     BluetoothAdapter myBluetooth = null;
-    static BluetoothSocket btSocket = null;
-    static BluetoothSocket addOnSocket = null;
+    public static BluetoothSocket btSocket = null;
+    public static BluetoothSocket addOnSocket = null;
     private boolean isBtConnected = false;
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     //    static final UUID myServiceUUID = UUID.fromString("4fafc201-1fb5-459e-8fcc-c5c9c331914b");
 //    static final UUID myUUID = UUID.fromString("beb5483e-36e1-4688-b7f5-ea07361b26a8");
-    private boolean ConnectSuccess = true;
+    public static boolean ConnectSuccess = false;
+    public static boolean addOnConnectSuccess = false;
     private boolean useAddOn = false;
 
     private BroadcastReceiver buzzerOnSignalReceiver;
     private BroadcastReceiver buzzerOffSignalReceiver;
     private BroadcastReceiver reconnectSignalReceiver;
+    private BroadcastReceiver disconnectSignalReceiver;
+    private BroadcastReceiver addOnReconnectSignalReceiver;
     private BroadcastReceiver addOnLedOnReceiver;
     private BroadcastReceiver addOnLedOffReceiver;
+
+    MyBinder binder=new MyBinder();
+    BluetoothService bleService;
 
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return binder;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -66,6 +74,14 @@ public class BluetoothService extends Service {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
             startMyOwnForeground();
         startMyOwnForeground();
+    }
+
+    public class MyBinder extends Binder
+    {
+        public BluetoothService getServiceSystem()
+        {
+            return BluetoothService.this;
+        }
     }
 
     public BluetoothSocket getBtSocket(){
@@ -104,7 +120,6 @@ public class BluetoothService extends Service {
                 startInForeground();
                 initCirculatioService();
                 initAddOnService();
-                checkConnection();
             }
         }.start();
         return START_STICKY;
@@ -124,6 +139,18 @@ public class BluetoothService extends Service {
             final int SERVICE_NOTIFICATION_ID = 8598001;
             startForeground(SERVICE_NOTIFICATION_ID, notification);
         }
+
+        final IntentFilter disconnectSignal = new IntentFilter();
+        disconnectSignal.addAction(Constants.ACTION_CIRCULATIO_DISCONNECT);
+        disconnectSignalReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i("BLE", "Got disconnect message");
+                disconnect();
+            }
+        };
+        registerReceiver(disconnectSignalReceiver, disconnectSignal);
     }
 
 
@@ -134,14 +161,32 @@ public class BluetoothService extends Service {
                 BluetoothDevice circulatioAddOn = mBluetoothAdapter.getRemoteDevice(addOnAddress);
                 addOnSocket = circulatioAddOn.createInsecureRfcommSocketToServiceRecord(myUUID);
                 addOnSocket.connect();
+                addOnConnectSuccess = true;
                 receiveData(addOnSocket);
                 Log.i("BLE", "Connected to the add on!!!");
+                MainActivity.mIsAddOnConnected = true;
             } catch (IOException e) {
+                MainActivity.mIsAddOnConnected = false;
+                addOnConnectSuccess = false;
+
+
                 Log.i("BLE", "Could not connect to add on!!!");
             }
         }else{
             Log.i("BLE", "Not using add on!!!");
         }
+
+        final IntentFilter addOnReconnectSignal = new IntentFilter();
+        addOnReconnectSignal.addAction(Constants.ACTION_ADDON_RECONNECT);
+        addOnReconnectSignalReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i("BLE", "Got add on reconnect message");
+                addOnReconnect();
+            }
+        };
+        registerReceiver(addOnReconnectSignalReceiver, addOnReconnectSignal);
     }
 
     public void initCirculatioService(){
@@ -160,10 +205,15 @@ public class BluetoothService extends Service {
             BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
             btSocket.connect();
             ConnectSuccess=true;
+            Log.i("BLE", "Connected to Circulatio!!!!!!!");
+            MainActivity.mIsCirculatioConnected = true;
+
 //                    }
 //            }
         } catch (IOException e) {
             ConnectSuccess = false;
+            MainActivity.mIsCirculatioConnected = false;
+
             Log.i("BLE", "Could not connect to device!!!");
         }
 
@@ -189,7 +239,7 @@ public class BluetoothService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i("BLE", "Got buzzer off message");
-                sendSignal("0", btSocket); // 0 for led off, 3 for buzzer off
+                sendSignal("3", btSocket); // 0 for led off, 3 for buzzer off
                 if(addOnSocket!=null){
                     sendSignal("8", addOnSocket);
                 }
@@ -231,6 +281,25 @@ public class BluetoothService extends Service {
         }
     }
 
+    private void addOnReconnect(){
+        if(SetUpInfo.useAddOn) {
+            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            try {
+                BluetoothDevice circulatioAddOn = mBluetoothAdapter.getRemoteDevice(addOnAddress);
+                addOnSocket = circulatioAddOn.createInsecureRfcommSocketToServiceRecord(myUUID);
+                addOnSocket.connect();
+                addOnConnectSuccess = true;
+                receiveData(addOnSocket);
+                Log.i("BLE", "Connected to the add on!!!");
+            } catch (IOException e) {
+                addOnConnectSuccess = false;
+                Log.i("BLE", "Could not connect to add on!!!");
+            }
+        }else{
+            Log.i("BLE", "Not using add on!!!");
+        }
+    }
+
     private void sendSignal ( String number, BluetoothSocket socket ) {
         if ( socket != null ) {
             try {
@@ -242,10 +311,12 @@ public class BluetoothService extends Service {
         }
     }
 
-    private void Disconnect () {
+    private void disconnect () {
         if ( btSocket!=null ) {
             try {
                 btSocket.close();
+                ConnectSuccess = false;
+
             } catch(IOException e) {
                 Log.i("BLE", "Error on disconnection");
             }
@@ -253,6 +324,7 @@ public class BluetoothService extends Service {
         if(addOnSocket!=null){
             try{
                 addOnSocket.close();
+                addOnConnectSuccess = false;
             }catch (IOException e){
                 Log.i("BLE", "Error on addOn disconnection");
             }
@@ -262,7 +334,7 @@ public class BluetoothService extends Service {
     @Override
     public void onDestroy() {
         Log.i("BLUETOOTH", "Service has been stopped");
-        Disconnect();
+        disconnect();
         super.onDestroy();
 //        unregisterReceiver(buzzerOnSignalReceiver);
 //        unregisterReceiver(buzzerOffSignalReceiver);
@@ -277,33 +349,9 @@ public class BluetoothService extends Service {
         unregisterReceiver(buzzerOnSignalReceiver);
         unregisterReceiver(buzzerOffSignalReceiver);
         unregisterReceiver(reconnectSignalReceiver);
+        unregisterReceiver(disconnectSignalReceiver);
+        unregisterReceiver(addOnReconnectSignalReceiver);
         return super.onUnbind(intent);
-    }
-
-    private void checkConnection(){
-        new Thread(){
-            @Override
-            public void run(){
-                if ( btSocket!=null ) {
-                    if(btSocket.isConnected()) {
-                        Log.i("BLE", "BTSOCKET CONNECTED");
-                    }
-                    else {
-                        Log.i("BLE", "BTSOCKET NOT CONNECTED");
-                    }
-                }
-
-                if(addOnSocket!=null){
-                    if(addOnSocket.isConnected()){
-                        Log.i("BLE", "ADDONSOCKET CONNECTED");
-
-                    }else{
-                        Log.i("BLE", "ADDONSOCKET NOT CONNECTED");
-                    }
-                }
-
-            }
-        };
     }
 
     private void receiveData(BluetoothSocket socket){
@@ -348,11 +396,14 @@ public class BluetoothService extends Service {
                                 Log.i("logging", readMessage + "");
                             } catch (IOException e) {
                                 Log.i("EXCEPTION", "BREAK");
+                                addOnConnectSuccess = false;
                                 break;
                             }
                         }
                     } catch (IOException e) {
                         Log.i("READ", "Error on read!!");
+                        addOnConnectSuccess = false;
+
                     }
                 }
             }

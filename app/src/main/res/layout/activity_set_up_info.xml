@@ -18,9 +18,10 @@
         android:minWidth="48dp"
         android:minHeight="48dp"
         android:layout_gravity="right"
-        android:src="@drawable/ic_baseline_info_24"
+        android:src="@drawable/ic_baseline_info_32"
         app:layout_constraintBottom_toTopOf="@+id/CirculatioFrame"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/black" />
 
     <TextView
         android:layout_width="match_parent"

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/CirculatioFrame"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginRight="24dp"
+        android:background="@drawable/border1"
+        android:onClick="blinkBLTButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="OnClick,SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/CirculatioName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="5dp"
+        android:text="@string/device"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/CirculatioFrame"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/buttonInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:background="#0000"
+        android:src="@drawable/ic_baseline_info_32"
+        app:layout_constraintBottom_toTopOf="@+id/CirculatioFrame"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/black"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <ImageButton
+        android:id="@+id/ellipsis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#0000"
+        android:onClick="showMenu"
+        android:src="@drawable/ic_baseline_more_vert_32"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@+id/deviceName"
+        app:layout_constraintTop_toTopOf="@+id/CirculatioFrame"
+        app:tint="@color/black" />
+
+    <TextView
+        android:id="@+id/deviceName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
+        android:gravity="center"
+        android:maxLines="2"
+        android:text="@string/your_circulatio"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="28sp"
+        app:layout_constraintEnd_toEndOf="@+id/CirculatioFrame"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="@+id/CirculatioFrame" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="116dp"
+        android:layout_height="120dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="@+id/CirculatioFrame"
+        app:layout_constraintTop_toTopOf="@+id/CirculatioFrame"
+        app:srcCompat="@drawable/logo" />
+
+    <Button
+        android:id="@+id/bltButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/custom_button1"
+        android:drawableLeft="@drawable/ic_baseline_bluetooth_24"
+        android:text="@string/not_connected"
+        android:textColor="@color/red"
+        app:backgroundTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/CirculatioFrame"
+        app:layout_constraintEnd_toEndOf="@+id/CirculatioFrame"
+        app:layout_constraintStart_toEndOf="@+id/imageView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,19 +10,24 @@ import android.app.AlertDialog;
 import android.app.Notification;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.BluetoothSocket;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,43 +54,92 @@ public class MainActivity extends AppCompatActivity {
     private boolean mIsActivityRunning = false;
 
     private Bundle mSavedInstanceState;
-    private boolean mIsCirculatioConnected;
+    public static boolean mIsCirculatioConnected;
+    public static boolean mIsAddOnConnected;
     private BluetoothAdapter mBluetoothAdapter;
     //    private PowerManager.WakeLock wakeLock;
     private Utils mUtils;
     BluetoothManager bluetoothManager;
     Button btnConnection;
     Button startButton;
+    Button addOnButton;
     AlertDialog.Builder addBLEOffDialog;
     AlertDialog.Builder addCirculatioNotFoundDialog;
+    AlertDialog.Builder addAddOnNotFoundDialog;
+    AlertDialog.Builder startMassageNotifDialog;
     private BroadcastReceiver sittingReceiver;
     private BroadcastReceiver standingReceiver;
     private BroadcastReceiver notifReceiver;
 
+    BluetoothService bleService;
+
     TextView textViewName;
+    TextView addOnView;
     ImageView activityType;
+    Menu ellipsisMenu;
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
+            String action = intent.getAction();
 
-            if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
-                //Do something if connected
-                btnConnection.setText(R.string.connected);
-                btnConnection.setTextColor(getApplication().getResources().getColor(R.color.circulatio_green));
-                mIsCirculatioConnected = true;
-                startButton.setEnabled(true);
-                Log.i("BLT", "Bluetooth connected...");
-            }
-            else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
-                //Do something if disconnected
-                btnConnection.setText(R.string.not_connected);
-                btnConnection.setTextColor(getApplication().getResources().getColor(R.color.red));
-                mIsCirculatioConnected = false;
-                startButton.setEnabled(false);
-                Log.i("BLT", "Bluetooth disconnected...");
-            }
+//            BluetoothService.checkConnection();
+
+            Handler h = new Handler();
+            h.postDelayed(new Runnable() {
+                public void run() {
+//                    BluetoothService.checkConnection();
+
+                    // Open request for bluetooth if turned off
+                    Log.i("BLE", String.valueOf(BluetoothService.ConnectSuccess));
+                    Log.i("BLE", String.valueOf(BluetoothService.addOnConnectSuccess));
+                    Log.i("BLE", String.valueOf(mIsCirculatioConnected));
+                    Log.i("BLE", String.valueOf(mIsAddOnConnected));
+                    if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
+                        if (BluetoothService.ConnectSuccess) {
+                            btnConnection.setText(R.string.connected);
+                            btnConnection.setTextColor(getApplication().getResources().getColor(R.color.circulatio_green));
+                            mIsCirculatioConnected = true;
+                            startButton.setEnabled(true);
+                            Log.i("BLT", "Bluetooth connected...");
+                        }
+                        if (BluetoothService.addOnConnectSuccess) {
+                            mIsAddOnConnected = true;
+                            addOnView.setVisibility(View.VISIBLE);
+                            activityType.setVisibility(View.VISIBLE);
+                            addOnButton.setVisibility(View.GONE);
+                            Log.i("BLT", "Add on connected...");
+
+                        }
+                    }else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+
+                        Intent intentCR = new Intent();
+                        intentCR.setAction(Constants.ACTION_CIRCULATIO_RECONNECT);
+                        // Data you need to pass to activity
+                        getApplicationContext().sendBroadcast(intentCR);
+
+                        Intent intentAR = new Intent();
+                        intentAR.setAction(Constants.ACTION_ADDON_RECONNECT);
+                        // Data you need to pass to activity
+                        getApplicationContext().sendBroadcast(intentAR);
+
+                        if (!BluetoothService.addOnConnectSuccess) {
+                            mIsAddOnConnected = false;
+                            addOnView.setVisibility(View.GONE);
+                            activityType.setVisibility(View.GONE);
+                            addOnButton.setVisibility(View.VISIBLE);
+                            Log.i("BLT", "Add on disconnected...");
+                        }
+                        if (!BluetoothService.ConnectSuccess) {
+                            btnConnection.setText(R.string.not_connected);
+                            btnConnection.setTextColor(getApplication().getResources().getColor(R.color.red));
+                            mIsCirculatioConnected = false;
+                            startButton.setEnabled(false);
+                            Log.i("BLT", "Bluetooth disconnected...");
+                        }
+                    }
+                }
+            }, 2000);
         }
     };
 
@@ -127,9 +181,21 @@ public class MainActivity extends AppCompatActivity {
         Log.i(this.getClass().getCanonicalName(), String.format("Circulatio Service starting: already running? = %s", alreadyRunning));
         if (!alreadyRunning) {
             Log.i("Main Activity", "Started Circulatio Bluetooth service");
+
+            ServiceConnection connection=new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    BluetoothService.MyBinder binderr=(BluetoothService.MyBinder)service;
+                    bleService=binderr.getServiceSystem();
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+
+                }
+            };
             Intent intentStartService = new Intent(this, BluetoothService.class);
             getApplicationContext().startService(intentStartService);
-//            mIsCirculatioConnected = true;
         } else {
             Log.i("Main Activity", "Circulatio Bluetooth service already running. Don't start it again.");
         }
@@ -141,16 +207,49 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.ellipsis_menu, popup.getMenu());
         popup.show();
+
+//        if (mIsCirculatioConnected){
+//            popup.getMenu().findItem(1).setVisible(false);
+//            popup.getMenu().findItem(2).setVisible(true);
+//        }
+//        else{
+//            popup.getMenu().findItem(1).setVisible(true);
+//            popup.getMenu().findItem(2).setVisible(false);
+//        }
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 if(menuItem.getItemId() == R.id.connect) {
-                    // TODO
-                    return true;
+                    if(!mIsCirculatioConnected && (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF)){
+                        addBLEOffDialog.show();
+                    }
+                    else if(!mIsCirculatioConnected && (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_ON)){
+                        Intent intent = new Intent();
+                        intent.setAction(Constants.ACTION_CIRCULATIO_RECONNECT);
+                        // Data you need to pass to activity
+                        getApplicationContext().sendBroadcast(intent);
+
+                        Handler h = new Handler();
+                        h.postDelayed(new Runnable() {
+                            public void run() {
+                                // Open request for bluetooth if turned off
+                                if(!mIsCirculatioConnected){
+                                    addCirculatioNotFoundDialog.show();
+                                }
+                                else {
+                                    startButton.setEnabled(true);
+                                }
+                            }
+                        }, 5000);
+                    }
                 }
                 else if (menuItem.getItemId() == R.id.disconnect) {
-                    // TODO
-                    return true;
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_CIRCULATIO_DISCONNECT);
+                    // Data you need to pass to activity
+                    getApplicationContext().sendBroadcast(intent);
+                    btnConnection.setText(R.string.not_connected);
+                    btnConnection.setTextColor(getApplication().getResources().getColor(R.color.red));
                 }
                 else if (menuItem.getItemId() == R.id.rename) {
                     // TODO
@@ -166,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("MissingPermission")
+    @SuppressLint({"MissingPermission", "ResourceType"})
     public void initMainActivity() {
         Log.i("MainActivity", "Initialising main activity");
 
@@ -178,14 +277,8 @@ public class MainActivity extends AppCompatActivity {
         String name = User.getName();
         name = name + "'s Circulatio";
         textViewName.setText(name);
+        ellipsisMenu = findViewById(R.menu.ellipsis_menu);
 
-        activityType = findViewById(R.id.manPositionImage);
-        initReceivers();
-
-        btnConnection = findViewById(R.id.bltButton);
-
-        startButton = findViewById(R.id.btnStartMassage1);
-        startButton.setEnabled(false);
 
 //        startButton.setEnabled(mIsCirculatioConnected);
 
@@ -207,9 +300,52 @@ public class MainActivity extends AppCompatActivity {
 
         IntentFilter filter1 = new IntentFilter();
         filter1.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
-        filter1.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+//        filter1.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
         filter1.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         registerReceiver(mReceiver, filter1);
+
+        activityType = findViewById(R.id.manPositionImage);
+        addOnButton = findViewById(R.id.addOnButton);
+        addOnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View v) {
+                Intent intent = new Intent();
+                intent.setAction(Constants.ACTION_ADDON_RECONNECT);
+                // Data you need to pass to activity
+                getApplicationContext().sendBroadcast(intent);
+                Handler h = new Handler();
+                h.postDelayed(new Runnable() {
+                    public void run() {
+                        // Open request for bluetooth if turned off
+                        if(!mIsAddOnConnected){
+                            addAddOnNotFoundDialog.show();
+                        }
+                        else {
+                            addOnView.setVisibility(View.VISIBLE);
+                            activityType.setVisibility(View.VISIBLE);
+                            addOnButton.setVisibility(View.GONE);
+                        }
+                    }
+                }, 5000);
+            }
+        });
+        addOnView = findViewById(R.id.yourPosition);
+
+        if(mIsAddOnConnected){
+            addOnView.setVisibility(View.VISIBLE);
+            activityType.setVisibility(View.VISIBLE);
+            addOnButton.setVisibility(View.GONE);
+        }else{
+            addOnView.setVisibility(View.GONE);
+            activityType.setVisibility(View.GONE);
+            addOnButton.setVisibility(View.VISIBLE);
+        }
+        initReceivers();
+
+        btnConnection = findViewById(R.id.bltButton);
+
+        startButton = findViewById(R.id.btnStartMassage1);
+        startButton.setEnabled(false);
 
         addBLEOffDialog = new AlertDialog.Builder(this).setTitle("Device Bluetooth Off")
                 .setMessage("Please turn on Bluetooth on your device to use Circulatio")
@@ -224,23 +360,26 @@ public class MainActivity extends AppCompatActivity {
                         dialog.cancel();
                     }});
 
+        addAddOnNotFoundDialog = new AlertDialog.Builder(this).setTitle("Add On Not Found")
+                .setMessage("Please ensure add on is turned on")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }});
+
+        startMassageNotifDialog = new AlertDialog.Builder(this).setTitle("Please Start Massage")
+                .setMessage("You have been sitting for too long, please activate massage!")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }});
+
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mIsCirculatioConnected && startButton.getText().equals(getString(R.string.start_massage))) {
-                    startButton.setText(R.string.stop_massage_button);
-                    Intent intent = new Intent();
-                    intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_ON);
-                    // Data you need to pass to activity
-                    getApplicationContext().sendBroadcast(intent);
-                }
-                else if (mIsCirculatioConnected && startButton.getText().equals(getString(R.string.stop_massage_button))) {
-                    startButton.setText(R.string.start_massage);
-                    Intent intent = new Intent();
-                    intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_OFF);
-                    // Data you need to pass to activity
-                    getApplicationContext().sendBroadcast(intent);
-                }
+                Intent inn1=getIntent();
+                inn1=new Intent(MainActivity.this,MassageSetup.class);
+                startActivity(inn1);
             }
         });
 
@@ -256,32 +395,32 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        btnConnection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!mIsCirculatioConnected && (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF)){
-                    addBLEOffDialog.show();
-                }
-                else if(!mIsCirculatioConnected && (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_ON)){
-                    Intent intent = new Intent();
-                    intent.setAction(Constants.ACTION_CIRCULATIO_RECONNECT);
-                    // Data you need to pass to activity
-                    getApplicationContext().sendBroadcast(intent);
-                    btnConnection.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(!mIsCirculatioConnected){
-                                addCirculatioNotFoundDialog.show();
-                            }
-                            else {
-                                startButton.setEnabled(true);
-                            }
-                        }
-                    }, 2000);
-
-                }
-            }
-        });
+//        btnConnection.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(!mIsCirculatioConnected && (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF)){
+//                    addBLEOffDialog.show();
+//                }
+//                else if(!mIsCirculatioConnected && (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_ON)){
+//                    Intent intent = new Intent();
+//                    intent.setAction(Constants.ACTION_CIRCULATIO_RECONNECT);
+//                    // Data you need to pass to activity
+//                    getApplicationContext().sendBroadcast(intent);
+//                    btnConnection.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if(!mIsCirculatioConnected){
+//                                addCirculatioNotFoundDialog.show();
+//                            }
+//                            else {
+//                                startButton.setEnabled(true);
+//                            }
+//                        }
+//                    }, 2000);
+//
+//                }
+//            }
+//        });
 
     }
 
@@ -313,6 +452,20 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         registerReceiver(standingReceiver, standingIntent);
+
+        final IntentFilter notifIntent = new IntentFilter();
+        notifIntent.addAction(Constants.ACTION_MASSAGE_NOTIF);
+        notifReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i("BLE", "Got notification message");
+                startMassageNotifDialog.show();
+            }
+        };
+        registerReceiver(notifReceiver, notifIntent);
+
+
 
     }
 
