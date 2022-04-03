@@ -32,16 +32,22 @@
         android:textColor="@color/black"
         android:textSize="20sp"/>
 
-    <EditText
-        android:id="@+id/enter_name"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="5dp"
-        android:inputType="textPersonName"
-        android:maxLength="20"
-        android:maxLines="1" />
+        app:counterEnabled="true"
+        app:counterMaxLength="20">
+        <EditText
+            android:id="@+id/enter_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:ems="20" />
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <View
         android:layout_width="0dp"

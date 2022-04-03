@@ -24,6 +24,26 @@ public class User {
         return name;
     }
 
+    public static boolean changeName(String newName, Context context) {
+        boolean changed;
+        if (!newName.isEmpty() && isValidName(newName)) {
+            SharedPreferences sharedPreferences = context.getSharedPreferences(
+                    "CirculatioUserData", Context.MODE_PRIVATE);
+
+            Editor editor = sharedPreferences.edit();
+            editor.putString("name", fixName(newName));
+
+            editor.commit();
+            loadUserData(context);
+            changed = true;
+        }
+        else {
+            changed = false;
+        }
+
+        return changed;
+    }
+
     public static String getdeviceID() {
         assert(dataLoaded) : "Data has not been loaded. Programming Error";
 

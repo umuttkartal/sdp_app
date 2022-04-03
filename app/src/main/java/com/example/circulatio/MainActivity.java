@@ -6,7 +6,9 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.Lifecycle;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Notification;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -26,17 +28,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.text.Editable;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -49,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     private boolean mIsActivityRunning = false;
@@ -251,7 +259,37 @@ public class MainActivity extends AppCompatActivity {
                     btnConnection.setTextColor(getApplication().getResources().getColor(R.color.red));
                 }
                 else if (menuItem.getItemId() == R.id.rename) {
-                    // TODO
+                    AlertDialog.Builder alert = new AlertDialog.Builder(
+                            MainActivity.this);
+                    alert.setTitle("Enter new name");
+
+                    final EditText input = new EditText(MainActivity.this);
+                    input.setFilters(new InputFilter[] {new InputFilter.LengthFilter(20)});
+                    alert.setView(input);
+                    alert.setMessage("Please ensure new name contains no invalid characters including whitespaces.");
+
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            String str1 = input.getEditableText().toString();
+                            boolean changed = User.changeName(str1, MainActivity.this);
+
+                            textViewName = findViewById(R.id.deviceName);
+                            User.loadUserData(MainActivity.this);
+                            String name = User.getName();
+                            name = name + "'s Circulatio";
+                            textViewName.setText(name);
+
+                        }
+                    });
+
+                    alert.setNegativeButton("CANCEL",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alertDialog = alert.create();
+                    alertDialog.show();
                     return true;
                 }
                 else if (menuItem.getItemId() == R.id.delete) {
