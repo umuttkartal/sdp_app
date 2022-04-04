@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_marginLeft="12dp"
-    android:layout_marginRight="12dp"
+    android:background="@color/background"
     tools:context=".SetUpInfo">
 
 
@@ -18,29 +17,50 @@
         android:minWidth="48dp"
         android:minHeight="48dp"
         android:layout_gravity="right"
-        android:src="@drawable/ic_baseline_info_24"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_baseline_info_32"
         app:layout_constraintBottom_toTopOf="@+id/CirculatioFrame"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/black" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:text="@string/if_you_have_any_questions_please_refer_to_the_section_2_in_the_user_manual_info_icon"
+        android:onClick="blinkInfoButton"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1.5"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
         android:text="@string/what_is_your_name"
         android:textColor="@color/black"
         android:textSize="20sp"/>
 
-    <EditText
-        android:id="@+id/enter_name"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="5dp"
-        android:inputType="textPersonName"
-        android:maxLength="20"
-        android:maxLines="1" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        app:counterEnabled="true"
+        app:counterMaxLength="15">
+        <EditText
+            android:id="@+id/enter_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:ems="20"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <View
         android:layout_width="0dp"
@@ -50,8 +70,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
         android:text="@string/please_select_your_circulatio"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -61,8 +81,8 @@
         android:id="@+id/bluetooth_devices_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
         android:layout_marginTop="5dp"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"/>
@@ -75,8 +95,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
         android:text="@string/please_enter_your_circulatio_pin"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -86,8 +106,8 @@
         android:id="@+id/enter_pin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
         android:layout_marginTop="5dp"
         android:inputType="number"
         android:maxLength="20"
@@ -96,15 +116,97 @@
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_weight="15"/>
+        android:layout_weight="1"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:text="@string/will_you_be_using_an_add_on"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        />
+
+    <Spinner
+        android:id="@+id/add_on_yes_no"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:text="@string/select_your_add_on"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:visibility="invisible"
+        />
+
+    <Spinner
+        android:id="@+id/bluetooth_devices_spinner2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        android:visibility="invisible"/>
+
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:text="@string/enter_pin_of_your_add_on"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:visibility="invisible"
+        />
+
+    <EditText
+        android:id="@+id/enter_pin2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="5dp"
+        android:inputType="number"
+        android:maxLength="20"
+        android:maxLines="1"
+        android:visibility="invisible"/>
+
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="10"/>
 
 
     <CheckBox
         android:id="@+id/checkbox_user_manual"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
         android:minHeight="48dp"
         android:text="@string/confirm_checkbox"
         android:textColor="@color/grey"
@@ -115,8 +217,9 @@
         android:id="@+id/btn_submit_setup_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="24dp"
         android:text="@string/submit"
         android:background="@drawable/custom_button2"
         android:textColor="@color/white"

@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -32,12 +34,32 @@ public class MassageCounter extends AppCompatActivity {
 
         setTimer(MassageController.getLength(getApplicationContext()));
 
+        Log.i("MASSAGE COUNTER", MassageController.getLength(getApplicationContext()).toString());
+
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String message = MassageController.StopMessage();
 
                 //send stop message via bluetooth
+
+                Intent intent = new Intent();
+                intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_OFF);
+                // Data you need to pass to activity
+                getApplicationContext().sendBroadcast(intent);
+
+//                Intent in = new Intent(getApplicationContext(), BluetoothService.class);
+//                getApplicationContext().stopService(in);
+
+//                Handler h = new Handler();
+//                h.postDelayed(new Runnable() {
+//                    public void run() {
+//                        // Open request for bluetooth if turned off
+//                        Intent i = new Intent(MassageCounter.this, MainActivity.class);
+//                        startActivity(i);
+//                        finish();
+//                    }
+//                }, 2000);
 
                 Intent i = new Intent(MassageCounter.this, MainActivity.class);
                 startActivity(i);
@@ -48,13 +70,26 @@ public class MassageCounter extends AppCompatActivity {
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Not implemented on Hardware side.
+                if((pauseButton.getText().toString()).equals("PAUSE")) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_OFF);
+                    // Data you need to pass to activity
+                    getApplicationContext().sendBroadcast(intent);
+                    pauseButton.setText(R.string.continue_massage);
+                }else if((pauseButton.getText().toString()).equals("CONTINUE")){
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_ON);
+                    // Data you need to pass to activity
+                    getApplicationContext().sendBroadcast(intent);
+                    pauseButton.setText(R.string.pause);
+                }
             }
         });
     }
 
-    public void setTimer(int time) {
-        countDownTimer = new CountDownTimer(time * ONE_SECOND_IN_MILLISECONDS,ONE_SECOND_IN_MILLISECONDS) {
+    public void setTimer(Integer time) {
+        countDownTimer = new CountDownTimer((int)time * ONE_SECOND_IN_MILLISECONDS,ONE_SECOND_IN_MILLISECONDS) {
+
             @Override
             public void onTick(long millisUntilFinished) {
                 int minutes = (int)(Math.floor((millisUntilFinished / 1000) / 60));
@@ -66,6 +101,10 @@ public class MassageCounter extends AppCompatActivity {
             @Override
             public void onFinish() {
                 countDownTimerText.setText("Done");
+                Intent intent = new Intent();
+                intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_OFF);
+                // Data you need to pass to activity
+                getApplicationContext().sendBroadcast(intent);
             }
         };
     }

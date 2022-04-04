@@ -4,180 +4,165 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".MassageSetup">
 
-    <TextView
-        android:id="@+id/CirculatioFrame"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginRight="24dp"
-        android:background="@drawable/border1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/device_frame" />
 
-    <TextView
-        android:id="@+id/CirculatioName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="24dp"
-        android:text="@string/device"
-        android:textColor="@color/black"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@+id/CirculatioFrame"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageButton
-        android:id="@+id/buttonInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:background="#0000"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
-        android:src="@drawable/ic_baseline_info_24"
-        app:layout_constraintBottom_toTopOf="@+id/CirculatioFrame"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/deviceName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="23dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:text="@string/your_circulatio"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="28sp"
-        app:layout_constraintEnd_toEndOf="@+id/CirculatioFrame"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="@+id/CirculatioFrame" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="116dp"
-        android:layout_height="120dp"
-        android:layout_marginStart="18dp"
-        app:layout_constraintStart_toStartOf="@+id/CirculatioFrame"
-        app:layout_constraintTop_toTopOf="@+id/CirculatioFrame"
-        app:srcCompat="@drawable/device_rb" />
-
-    <Button
-        android:id="@+id/bltButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/custom_button1"
-        android:drawableLeft="@drawable/ic_baseline_bluetooth_24"
-        android:text="Connected"
-        android:textColor="@color/navy"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        app:backgroundTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/CirculatioFrame"
-        app:layout_constraintEnd_toEndOf="@+id/CirculatioFrame"
-        app:layout_constraintStart_toEndOf="@+id/imageView" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:rotation="90"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:srcCompat="@drawable/ic_baseline_battery_full_24" />
+    <!--    <ImageView-->
+    <!--        android:id="@+id/imageView2"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:rotation="90"-->
+    <!--        app:layout_constraintEnd_toEndOf="@+id/imageView"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/imageView"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/imageView"-->
+    <!--        app:srcCompat="@drawable/ic_baseline_battery_full_24" />-->
 
 
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginTop="24dp"
-        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/CirculatioFrame">
+        app:layout_constraintTop_toBottomOf="@+id/include">
 
-
-        <TextView
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/massage"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="0.5" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/vibration_type"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-
-        <Spinner
-            android:id="@+id/vibrationTypeSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/massage_speed"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-
-        <Spinner
-            android:id="@+id/massageSpeedSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/massage_length"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-
-        <Spinner
-            android:id="@+id/massageLengthSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown" />
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginRight="24dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/CirculatioFrame">
 
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/massage"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btn_prefill_massage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/custom_button4"
+                android:text="@string/select_the_recommended_massage"
+                android:textColor="@color/black" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="100dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="4"
+                    android:background="@color/light_grey" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="3dp"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="@string/or"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="100dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="4"
+                    android:background="@color/light_grey" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/vibration_type"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <Spinner
+                android:id="@+id/vibrationTypeSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@android:drawable/btn_dropdown"
+                android:spinnerMode="dropdown" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/massage_speed"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <Spinner
+                android:id="@+id/massageSpeedSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@android:drawable/btn_dropdown"
+                android:spinnerMode="dropdown" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/massage_length"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/massageLengthSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:inputType="number"
+                android:maxLength="20"
+                android:maxLines="1" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/btnStartMassage"
@@ -185,8 +170,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/custom_button3"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_selector"
         android:text="@string/start"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
