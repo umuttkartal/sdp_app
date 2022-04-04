@@ -21,7 +21,7 @@ public class MassageController {
         Map<String, Integer> result = new HashMap<>();
         result.put("MassageLength", DEFAULT_MASSAGE_LENGTH);
         result.put("MassageType", DEFAULT_MASSAGE_TYPE);
-        result.put("MassageIntensity", DEFAULT_MASSAGE_INTENSITY)
+        result.put("MassageIntensity", DEFAULT_MASSAGE_INTENSITY);
         return Collections.unmodifiableMap(result);
     }
 
@@ -34,6 +34,12 @@ public class MassageController {
         return STOP_MESSAGE;
     }
 
+    /**
+     * Now redundant.
+     *
+     * @param context Applications Context
+     * @return The message to send to the device,
+     */
     public static String StartMessage(Context context) {
         String x = String.format("%02d", getType(context) + getIntensity(context));
         String y = String.format("%02d", getLength(context));
@@ -102,7 +108,7 @@ public class MassageController {
     }
 
     /**
-     * This method is used to change
+     * This method is used to change a setting in the massage settings.
      *
      * @param nameOfData The name of the data that is being set in the settings.
      * @param data The data that is being set in the settings.
@@ -118,11 +124,11 @@ public class MassageController {
     }
 
     /**
-     * This method is used to get
+     * This method is used to get a setting from the massage settings.
      *
-     * @param nameOfData
-     * @param context
-     * @return
+     * @param nameOfData The name of the data that is being retrieved from the settings.
+     * @param context The applications context.
+     * @return The setting
      */
     private static int loadData(String nameOfData, Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(
