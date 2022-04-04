@@ -17,6 +17,7 @@ import android.widget.Toast;
 public class MassageSetup extends AppCompatActivity {
 
     Button startButton;
+    Button recommendedButton;
     private Spinner intensitySpinner;
     private EditText textEnterLength;
     String length;
@@ -47,6 +48,7 @@ public class MassageSetup extends AppCompatActivity {
         });
 
         startButton = findViewById(R.id.btnStartMassage);
+        recommendedButton = findViewById(R.id.btn_prefill_massage);
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +76,30 @@ public class MassageSetup extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_ON);
                 intent.putExtra("intensity", intensityNum);
+                intent.putExtra("duration", out);
+                // Data you need to pass to activity
+                getApplicationContext().sendBroadcast(intent);
+
+                Intent inn1=getIntent();
+                inn1=new Intent(MassageSetup.this,MassageCounter.class);
+                startActivity(inn1);
+                finish();
+            }
+        });
+
+        recommendedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Integer length = 15 * 60;
+                Log.i("MASSAGE SETUP", length.toString());
+
+                String zeros = "00000";
+                String out = zeros.substring(0, 5 - length.toString().length()) + length.toString();
+
+                MassageController.setLength(length, getApplicationContext());
+                Intent intent = new Intent();
+                intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_ON);
+                intent.putExtra("intensity", "14");
                 intent.putExtra("duration", out);
                 // Data you need to pass to activity
                 getApplicationContext().sendBroadcast(intent);
