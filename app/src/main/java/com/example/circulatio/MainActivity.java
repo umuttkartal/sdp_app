@@ -79,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
     private BroadcastReceiver sittingReceiver;
     private BroadcastReceiver standingReceiver;
     private BroadcastReceiver notifReceiver;
-
-    BluetoothService bleService;
+//
+//    BluetoothService bleService;
 
     TextView textViewName;
     TextView addOnView;
@@ -93,61 +93,77 @@ public class MainActivity extends AppCompatActivity {
 
 //            BluetoothService.checkConnection();
 
-            Handler h = new Handler();
-            h.postDelayed(new Runnable() {
-                public void run() {
+//            Handler h = new Handler();
+//            h.postDelayed(new Runnable() {
+//                public void run() {
 //                    BluetoothService.checkConnection();
 
                     // Open request for bluetooth if turned off
-                    Log.i("BLE", String.valueOf(BluetoothService.ConnectSuccess));
-                    Log.i("BLE", String.valueOf(BluetoothService.addOnConnectSuccess));
-                    Log.i("BLE", String.valueOf(mIsCirculatioConnected));
-                    Log.i("BLE", String.valueOf(mIsAddOnConnected));
-                    if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
-                        if (BluetoothService.ConnectSuccess) {
-                            btnConnection.setText(R.string.connected);
-                            btnConnection.setTextColor(getApplication().getResources().getColor(R.color.circulatio_green));
-                            mIsCirculatioConnected = true;
-                            startButton.setEnabled(true);
-                            Log.i("BLT", "Bluetooth connected...");
-                        }
-                        if (BluetoothService.addOnConnectSuccess) {
-                            mIsAddOnConnected = true;
-                            addOnView.setVisibility(View.VISIBLE);
-                            activityType.setVisibility(View.VISIBLE);
-                            addOnButton.setVisibility(View.GONE);
-                            Log.i("BLT", "Add on connected...");
+                Log.i("BLE", String.valueOf(BluetoothService.ConnectSuccess));
+                Log.i("BLE", String.valueOf(BluetoothService.addOnConnectSuccess));
+                Log.i("BLE", String.valueOf(mIsCirculatioConnected));
+                Log.i("BLE", String.valueOf(mIsAddOnConnected));
+                if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
 
-                        }
-                    }else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+                    Intent intentCR = new Intent();
+                    intentCR.setAction(Constants.ACTION_CIRCULATIO_RECONNECT);
+                    // Data you need to pass to activity
+                    getApplicationContext().sendBroadcast(intentCR);
 
-                        Intent intentCR = new Intent();
-                        intentCR.setAction(Constants.ACTION_CIRCULATIO_RECONNECT);
-                        // Data you need to pass to activity
-                        getApplicationContext().sendBroadcast(intentCR);
+                    Intent intentAR = new Intent();
+                    intentAR.setAction(Constants.ACTION_ADDON_RECONNECT);
+                    // Data you need to pass to activity
+                    getApplicationContext().sendBroadcast(intentAR);
 
-                        Intent intentAR = new Intent();
-                        intentAR.setAction(Constants.ACTION_ADDON_RECONNECT);
-                        // Data you need to pass to activity
-                        getApplicationContext().sendBroadcast(intentAR);
+                    Handler h = new Handler();
+                    h.postDelayed(new Runnable() {
+                        public void run() {
+                            if (BluetoothService.ConnectSuccess) {
+                                btnConnection.setText(R.string.connected);
+                                btnConnection.setTextColor(getApplication().getResources().getColor(R.color.circulatio_green));
+                                mIsCirculatioConnected = true;
+                                startButton.setEnabled(true);
+                                Log.i("BLT", "Bluetooth connected...");
+                            }
+                            if (BluetoothService.addOnConnectSuccess) {
+                                mIsAddOnConnected = true;
+                                addOnView.setVisibility(View.VISIBLE);
+                                activityType.setVisibility(View.VISIBLE);
+                                addOnButton.setVisibility(View.GONE);
+                                Log.i("BLT", "Add on connected...");
 
-                        if (!BluetoothService.addOnConnectSuccess) {
-                            mIsAddOnConnected = false;
-                            addOnView.setVisibility(View.GONE);
-                            activityType.setVisibility(View.GONE);
-                            addOnButton.setVisibility(View.VISIBLE);
-                            Log.i("BLT", "Add on disconnected...");
+                            }
                         }
-                        if (!BluetoothService.ConnectSuccess) {
-                            btnConnection.setText(R.string.not_connected);
-                            btnConnection.setTextColor(getApplication().getResources().getColor(R.color.red));
-                            mIsCirculatioConnected = false;
-                            startButton.setEnabled(false);
-                            Log.i("BLT", "Bluetooth disconnected...");
-                        }
+                    }, 2000);
+                }else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+
+                    Intent intentCR = new Intent();
+                    intentCR.setAction(Constants.ACTION_CIRCULATIO_RECONNECT);
+                    // Data you need to pass to activity
+                    getApplicationContext().sendBroadcast(intentCR);
+
+                    Intent intentAR = new Intent();
+                    intentAR.setAction(Constants.ACTION_ADDON_RECONNECT);
+                    // Data you need to pass to activity
+                    getApplicationContext().sendBroadcast(intentAR);
+
+                    if (!BluetoothService.addOnConnectSuccess) {
+                        mIsAddOnConnected = false;
+                        addOnView.setVisibility(View.GONE);
+                        activityType.setVisibility(View.GONE);
+                        addOnButton.setVisibility(View.VISIBLE);
+                        Log.i("BLT", "Add on disconnected...");
+                    }
+                    if (!BluetoothService.ConnectSuccess) {
+                        btnConnection.setText(R.string.not_connected);
+                        btnConnection.setTextColor(getApplication().getResources().getColor(R.color.red));
+                        mIsCirculatioConnected = false;
+                        startButton.setEnabled(false);
+                        Log.i("BLT", "Bluetooth disconnected...");
                     }
                 }
-            }, 2000);
+//                }
+//            }, 1000);
         }
     };
 
@@ -190,24 +206,37 @@ public class MainActivity extends AppCompatActivity {
         if (!alreadyRunning) {
             Log.i("Main Activity", "Started Circulatio Bluetooth service");
 
-            ServiceConnection connection=new ServiceConnection() {
-                @Override
-                public void onServiceConnected(ComponentName name, IBinder service) {
-                    BluetoothService.MyBinder binderr=(BluetoothService.MyBinder)service;
-                    bleService=binderr.getServiceSystem();
-                }
-
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
-
-                }
-            };
+//            ServiceConnection connection=new ServiceConnection() {
+//                @Override
+//                public void onServiceConnected(ComponentName name, IBinder service) {
+//                    BluetoothService.MyBinder binderr=(BluetoothService.MyBinder)service;
+//                    bleService=binderr.getServiceSystem();
+//                }
+//
+//                @Override
+//                public void onServiceDisconnected(ComponentName name) {
+//
+//                }
+//            };
             Intent intentStartService = new Intent(this, BluetoothService.class);
             getApplicationContext().startService(intentStartService);
         } else {
             Log.i("Main Activity", "Circulatio Bluetooth service already running. Don't start it again.");
         }
         return alreadyRunning;
+    }
+
+    public void checkService(){
+        boolean alreadyRunning = Utils.isServiceRunning(BluetoothService.class, this);
+        // Only start service if it is not already running.
+        Log.i(this.getClass().getCanonicalName(), String.format("Circulatio Service starting: already running? = %s", alreadyRunning));
+        if (!alreadyRunning) {
+            Log.i("Main Activity", "Started Circulatio Bluetooth service");
+            Intent intentStartService = new Intent(this, BluetoothService.class);
+            getApplicationContext().startService(intentStartService);
+        } else {
+            Log.i("Main Activity", "Circulatio Bluetooth service already running. Don't start it again.");
+        }
     }
 
     public void showMenu(View v) {
@@ -228,6 +257,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 if(menuItem.getItemId() == R.id.connect) {
+                    checkService();
                     if(!mIsCirculatioConnected && (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF)){
                         addBLEOffDialog.show();
                     }
@@ -256,6 +286,8 @@ public class MainActivity extends AppCompatActivity {
                     intent.setAction(Constants.ACTION_CIRCULATIO_DISCONNECT);
                     // Data you need to pass to activity
                     getApplicationContext().sendBroadcast(intent);
+                    Intent in = new Intent(getApplicationContext(), BluetoothService.class);
+                    getApplicationContext().stopService(in);
                     btnConnection.setText(R.string.not_connected);
                     btnConnection.setTextColor(getApplication().getResources().getColor(R.color.red));
                 }
@@ -318,7 +350,7 @@ public class MainActivity extends AppCompatActivity {
                             Intent i=getIntent();
                             i=new Intent(MainActivity.this, InitialSetUp.class);
                             startActivity(i);
-                            // TODO: destroy the previous activity, how?
+                            finish();
                         }
                     });
 
@@ -464,6 +496,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent inn1=getIntent();
                 inn1=new Intent(MainActivity.this,MassageSetup.class);
                 startActivity(inn1);
+                finish();
             }
         });
 
@@ -477,34 +510,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-//        btnConnection.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if(!mIsCirculatioConnected && (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF)){
-//                    addBLEOffDialog.show();
-//                }
-//                else if(!mIsCirculatioConnected && (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_ON)){
-//                    Intent intent = new Intent();
-//                    intent.setAction(Constants.ACTION_CIRCULATIO_RECONNECT);
-//                    // Data you need to pass to activity
-//                    getApplicationContext().sendBroadcast(intent);
-//                    btnConnection.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            if(!mIsCirculatioConnected){
-//                                addCirculatioNotFoundDialog.show();
-//                            }
-//                            else {
-//                                startButton.setEnabled(true);
-//                            }
-//                        }
-//                    }, 2000);
-//
-//                }
-//            }
-//        });
+        if (BluetoothService.ConnectSuccess) {
+            btnConnection.setText(R.string.connected);
+            btnConnection.setTextColor(getApplication().getResources().getColor(R.color.circulatio_green));
+            mIsCirculatioConnected = true;
+            startButton.setEnabled(true);
+            Log.i("BLT", "Bluetooth connected...");
+        }
 
     }
 
@@ -578,9 +590,12 @@ public class MainActivity extends AppCompatActivity {
     public void onDestroy() {
         Log.i("DF", "App is being destroyed");
         unregisterReceiver(mReceiver);
+        unregisterReceiver(sittingReceiver);
+        unregisterReceiver(standingReceiver);
+        unregisterReceiver(notifReceiver);
 
-        Intent in = new Intent(getApplicationContext(), BluetoothService.class);
-        getApplicationContext().stopService(in);
+//        Intent in = new Intent(getApplicationContext(), BluetoothService.class);
+//        getApplicationContext().stopService(in);
 
         super.onDestroy();
     }

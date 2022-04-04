@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -60,6 +63,14 @@ public class SetUpInfo extends AppCompatActivity implements AdapterView.OnItemSe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_up_info);
+
+        boolean alreadyRunning = Utils.isServiceRunning(BluetoothService.class, this);
+        // Only start service if it is not already running.
+        Log.i(this.getClass().getCanonicalName(), String.format("Circulatio Service starting: already running? = %s", alreadyRunning));
+        if (alreadyRunning) {
+            Intent in = new Intent(getApplicationContext(), BluetoothService.class);
+            getApplicationContext().stopService(in);
+        }
 
         this.textEnterName  = findViewById(R.id.enter_name);
         this.spinnerBluetoothDevice = findViewById(R.id.bluetooth_devices_spinner);

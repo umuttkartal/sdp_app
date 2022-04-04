@@ -86,9 +86,16 @@
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>
     <string name="addOnConnect">Press here to connect the add-on</string>
+    <string name="continue_massage">CONTINUE</string>
 
     <string-array name="addOnOptions">
         <item>Yes</item>
         <item>No</item>
+    </string-array>
+
+    <string-array name="massageIntensity">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
     </string-array>
 </resources>

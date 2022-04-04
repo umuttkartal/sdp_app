@@ -162,7 +162,7 @@ public class BluetoothService extends Service {
                 addOnSocket = circulatioAddOn.createInsecureRfcommSocketToServiceRecord(myUUID);
                 addOnSocket.connect();
                 addOnConnectSuccess = true;
-                receiveData(addOnSocket);
+//                receiveData(addOnSocket);
                 Log.i("BLE", "Connected to the add on!!!");
                 MainActivity.mIsAddOnConnected = true;
             } catch (IOException e) {
@@ -224,8 +224,11 @@ public class BluetoothService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i("BLE", "Got buzzer on message");
-                sendSignal("1", btSocket); // 1 for led on, 2 for buzzer on
-                if(addOnSocket!=null){
+//                String type = intent.getExtras().getString("type");
+//                String intensity = intent.getExtras().getString("intensity");
+//                String duration = intent.getExtras().getString("duration");
+                sendSignal("21400010", btSocket); // 1 for led on, 2 for buzzer on
+                if(addOnSocket!=null && addOnConnectSuccess){
                     sendSignal("7", addOnSocket);
                 }
             }
@@ -240,12 +243,27 @@ public class BluetoothService extends Service {
             public void onReceive(Context context, Intent intent) {
                 Log.i("BLE", "Got buzzer off message");
                 sendSignal("3", btSocket); // 0 for led off, 3 for buzzer off
-                if(addOnSocket!=null){
+                if(addOnSocket!=null && addOnConnectSuccess){
                     sendSignal("8", addOnSocket);
                 }
             }
         };
         registerReceiver(buzzerOffSignalReceiver, buzzerOff);
+
+//        final IntentFilter buzzerContinue = new IntentFilter();
+//        buzzerContinue.addAction(Constants.ACTION_CIRCULATIO_BUZZER_CONTINUE);
+//        buzzerOffSignalReceiver = new BroadcastReceiver() {
+//
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                Log.i("BLE", "Got buzzer off message");
+//                sendSignal("3", btSocket); // 0 for led off, 3 for buzzer off
+//                if(addOnSocket!=null){
+//                    sendSignal("8", addOnSocket);
+//                }
+//            }
+//        };
+//        registerReceiver(buzzerOffSignalReceiver, buzzerContinue);
 
         final IntentFilter reconnectSignal = new IntentFilter();
         reconnectSignal.addAction(Constants.ACTION_CIRCULATIO_RECONNECT);
@@ -258,6 +276,8 @@ public class BluetoothService extends Service {
             }
         };
         registerReceiver(reconnectSignalReceiver, reconnectSignal);
+
+        receiveDataCirculatio(btSocket);
     }
 
     private void reconnect(){
@@ -273,6 +293,7 @@ public class BluetoothService extends Service {
             BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
             btSocket.connect();
             ConnectSuccess=true;
+            receiveDataCirculatio(btSocket);
 //                    }
 //            }
         } catch (IOException e) {
@@ -289,7 +310,7 @@ public class BluetoothService extends Service {
                 addOnSocket = circulatioAddOn.createInsecureRfcommSocketToServiceRecord(myUUID);
                 addOnSocket.connect();
                 addOnConnectSuccess = true;
-                receiveData(addOnSocket);
+//                receiveData(addOnSocket);
                 Log.i("BLE", "Connected to the add on!!!");
             } catch (IOException e) {
                 addOnConnectSuccess = false;
@@ -339,18 +360,24 @@ public class BluetoothService extends Service {
 //        unregisterReceiver(buzzerOnSignalReceiver);
 //        unregisterReceiver(buzzerOffSignalReceiver);
 
-        int pid = android.os.Process.myPid();
-        android.os.Process.killProcess(pid);
-    }
+//        int pid = android.os.Process.myPid();
+//        android.os.Process.killProcess(pid);
 
-    @Override
-    public boolean onUnbind(Intent intent) {
-        Log.i("BLUETOOTH", "Main Bluetooth service stopped by Android");
         unregisterReceiver(buzzerOnSignalReceiver);
         unregisterReceiver(buzzerOffSignalReceiver);
         unregisterReceiver(reconnectSignalReceiver);
         unregisterReceiver(disconnectSignalReceiver);
         unregisterReceiver(addOnReconnectSignalReceiver);
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.i("BLUETOOTH", "Main Bluetooth service stopped by Android");
+//        unregisterReceiver(buzzerOnSignalReceiver);
+//        unregisterReceiver(buzzerOffSignalReceiver);
+//        unregisterReceiver(reconnectSignalReceiver);
+//        unregisterReceiver(disconnectSignalReceiver);
+//        unregisterReceiver(addOnReconnectSignalReceiver);
         return super.onUnbind(intent);
     }
 
@@ -404,6 +431,38 @@ public class BluetoothService extends Service {
                         Log.i("READ", "Error on read!!");
                         addOnConnectSuccess = false;
 
+                    }
+                }
+            }
+        }.start();
+    }
+
+    private void receiveDataCirculatio(BluetoothSocket socket){
+        new Thread(){
+            @Override
+            public void run() {
+                if (socket != null) {
+                    try {
+                        InputStream socketInputStream = socket.getInputStream();
+                        byte[] buffer = new byte[256];
+                        int bytes;
+
+                        // Keep looping to listen for received messages
+                        while (true) {
+                            try {
+                                bytes = socketInputStream.read(buffer);            //read bytes from input buffer
+                                String readMessage = new String(buffer, 0, bytes);
+                                // Send the obtained bytes to the UI Activity via handler
+                                Log.i("logging circulatio", readMessage + "");
+                            } catch (IOException e) {
+                                Log.i("EXCEPTION", "BREAK");
+                                ConnectSuccess = false;
+                                break;
+                            }
+                        }
+                    } catch (IOException e) {
+                        Log.i("READ", "Error on read!!");
+                        ConnectSuccess = false;
                     }
                 }
             }
