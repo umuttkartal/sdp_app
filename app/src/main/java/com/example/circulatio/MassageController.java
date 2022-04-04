@@ -39,11 +39,11 @@ public class MassageController {
         addData("MassageIntensity", intensity, context);
     }
 
-    public static int getLength(Context context) {
+    public static Integer getLength(Context context) {
         return loadData("MassageLength", context);
     }
 
-    public static void setLength(int length, Context context) {
+    public static void setLength(Integer length, Context context) {
         addData("MassageLength", length, context);
     }
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ public class MassageCounter extends AppCompatActivity {
         stopButton = (Button)findViewById(R.id.stopButton);
 
         setTimer(MassageController.getLength(getApplicationContext()));
+        Log.i("MASSAGE COUNTER", MassageController.getLength(getApplicationContext()).toString());
 
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,8 +86,8 @@ public class MassageCounter extends AppCompatActivity {
         });
     }
 
-    public void setTimer(int time) {
-        countDownTimer = new CountDownTimer(time * ONE_SECOND_IN_MILLISECONDS,ONE_SECOND_IN_MILLISECONDS) {
+    public void setTimer(Integer time) {
+        countDownTimer = new CountDownTimer((int)time * ONE_SECOND_IN_MILLISECONDS,ONE_SECOND_IN_MILLISECONDS) {
             @Override
             public void onTick(long millisUntilFinished) {
                 int minutes = (int)(Math.floor((millisUntilFinished / 1000) / 60));

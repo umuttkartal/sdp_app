@@ -152,13 +152,14 @@
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
-            <Spinner
+            <EditText
                 android:id="@+id/massageLengthSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@android:drawable/btn_dropdown"
-                android:spinnerMode="dropdown" />
+                android:inputType="number"
+                android:maxLength="20"
+                android:maxLines="1" />
 
         </LinearLayout>
     </ScrollView>

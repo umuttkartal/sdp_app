@@ -52,6 +52,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     //    private PowerManager.WakeLock wakeLock;
     private Utils mUtils;
     BluetoothManager bluetoothManager;
-    Button btnConnection;
+    TextView bleStatus;
     Button startButton;
     Button addOnButton;
     AlertDialog.Builder addBLEOffDialog;
@@ -119,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
                     h.postDelayed(new Runnable() {
                         public void run() {
                             if (BluetoothService.ConnectSuccess) {
-                                btnConnection.setText(R.string.connected);
-                                btnConnection.setTextColor(getApplication().getResources().getColor(R.color.circulatio_green));
+                                bleStatus.setText(R.string.connected);
+                                bleStatus.setTextColor(getApplication().getResources().getColor(R.color.circulatio_green));
                                 mIsCirculatioConnected = true;
                                 startButton.setEnabled(true);
                                 Log.i("BLT", "Bluetooth connected...");
@@ -155,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("BLT", "Add on disconnected...");
                     }
                     if (!BluetoothService.ConnectSuccess) {
-                        btnConnection.setText(R.string.not_connected);
-                        btnConnection.setTextColor(getApplication().getResources().getColor(R.color.red));
+                        bleStatus.setText(R.string.not_connected);
+                        bleStatus.setTextColor(getApplication().getResources().getColor(R.color.red));
                         mIsCirculatioConnected = false;
                         startButton.setEnabled(false);
                         Log.i("BLT", "Bluetooth disconnected...");
@@ -183,10 +185,10 @@ public class MainActivity extends AppCompatActivity {
         }, 0);
     }
 
-    public void blinkBLTButton(View view) {
-        Animation startAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking_animation_not_repeated);
-        btnConnection.startAnimation(startAnimation);
-    }
+//    public void blinkBLTButton(View view) {
+//        Animation startAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking_animation_not_repeated);
+//        btnConnection.startAnimation(startAnimation);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -288,8 +290,8 @@ public class MainActivity extends AppCompatActivity {
                     getApplicationContext().sendBroadcast(intent);
                     Intent in = new Intent(getApplicationContext(), BluetoothService.class);
                     getApplicationContext().stopService(in);
-                    btnConnection.setText(R.string.not_connected);
-                    btnConnection.setTextColor(getApplication().getResources().getColor(R.color.red));
+                    bleStatus.setText(R.string.not_connected);
+                    bleStatus.setTextColor(getApplication().getResources().getColor(R.color.red));
                 }
                 else if (menuItem.getItemId() == R.id.rename) {
                     LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
@@ -458,7 +460,7 @@ public class MainActivity extends AppCompatActivity {
             addOnFrame.setVisibility(View.GONE);
         }
 
-        btnConnection = findViewById(R.id.bltButton);
+        bleStatus = findViewById(R.id.bltButton);
 
         startButton = findViewById(R.id.btnStartMassage1);
         startButton.setEnabled(false);
@@ -511,8 +513,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (BluetoothService.ConnectSuccess) {
-            btnConnection.setText(R.string.connected);
-            btnConnection.setTextColor(getApplication().getResources().getColor(R.color.circulatio_green));
+            bleStatus.setText(R.string.connected);
+            bleStatus.setTextColor(getApplication().getResources().getColor(R.color.circulatio_green));
             mIsCirculatioConnected = true;
             startButton.setEnabled(true);
             Log.i("BLT", "Bluetooth connected...");
@@ -590,10 +592,11 @@ public class MainActivity extends AppCompatActivity {
     public void onDestroy() {
         Log.i("DF", "App is being destroyed");
         unregisterReceiver(mReceiver);
-        unregisterReceiver(sittingReceiver);
-        unregisterReceiver(standingReceiver);
-        unregisterReceiver(notifReceiver);
-
+        if(SetUpInfo.useAddOn){
+            unregisterReceiver(sittingReceiver);
+            unregisterReceiver(standingReceiver);
+            unregisterReceiver(notifReceiver);
+        }
 //        Intent in = new Intent(getApplicationContext(), BluetoothService.class);
 //        getApplicationContext().stopService(in);
 

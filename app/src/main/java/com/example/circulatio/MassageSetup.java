@@ -4,16 +4,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class MassageSetup extends AppCompatActivity {
 
     Button startButton;
     private Spinner intensitySpinner;
+    private EditText textEnterLength;
+    String length;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +28,8 @@ public class MassageSetup extends AppCompatActivity {
         setContentView(R.layout.activity_massage_setup);
 
         this.intensitySpinner = findViewById(R.id.massageSpeedSpinner);
+        this.textEnterLength =  findViewById(R.id.massageLengthSpinner);
+
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.massageIntensity, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -42,11 +51,30 @@ public class MassageSetup extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Integer length = Integer.parseInt(textEnterLength.getText().toString()) * 60;
+                Log.i("MASSAGE SETUP", length.toString());
+
+                String zeros = "00000";
+                String out = zeros.substring(0, 5 - length.toString().length()) + length.toString();
+
+
+                String intensity = intensitySpinner.getSelectedItem().toString();
+                String intensityNum = null;
+                if(intensity.equals("Low")){
+                    intensityNum = "51";
+                }
+                if (intensity.equals("Medium")){
+                    intensityNum = "47";
+                }
+                if(intensity.equals("High")){
+                    intensityNum = "14";
+                }
+
+                MassageController.setLength(length, getApplicationContext());
                 Intent intent = new Intent();
                 intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_ON);
-//                intent.putExtra("type", "02");
-//                intent.putExtra("intensity", "14");
-//                intent.putExtra("duration", "01");
+                intent.putExtra("intensity", intensityNum);
+                intent.putExtra("duration", out);
                 // Data you need to pass to activity
                 getApplicationContext().sendBroadcast(intent);
 
@@ -56,5 +84,15 @@ public class MassageSetup extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.massageIntensity, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        intensitySpinner.setAdapter(adapter);
     }
 }

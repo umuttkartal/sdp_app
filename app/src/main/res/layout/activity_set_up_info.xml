@@ -17,10 +17,24 @@
         android:minWidth="48dp"
         android:minHeight="48dp"
         android:layout_gravity="right"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
         android:src="@drawable/ic_baseline_info_32"
         app:layout_constraintBottom_toTopOf="@+id/CirculatioFrame"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/black" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:text="@string/if_you_have_any_questions_please_refer_to_the_section_2_in_the_user_manual_info_icon"
+        android:onClick="blinkInfoButton"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1.5"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -37,14 +51,14 @@
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         app:counterEnabled="true"
-        app:counterMaxLength="20">
+        app:counterMaxLength="15">
         <EditText
             android:id="@+id/enter_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:ems="20" />
+            android:ems="20"/>
     </com.google.android.material.textfield.TextInputLayout>
 
 

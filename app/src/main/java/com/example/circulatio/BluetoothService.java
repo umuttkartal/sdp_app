@@ -225,9 +225,9 @@ public class BluetoothService extends Service {
             public void onReceive(Context context, Intent intent) {
                 Log.i("BLE", "Got buzzer on message");
 //                String type = intent.getExtras().getString("type");
-//                String intensity = intent.getExtras().getString("intensity");
-//                String duration = intent.getExtras().getString("duration");
-                sendSignal("21400010", btSocket); // 1 for led on, 2 for buzzer on
+                String intensity = intent.getExtras().getString("intensity");
+                String duration = intent.getExtras().getString("duration");
+                sendSignal("2" + intensity + duration, btSocket); // 1 for led on, 2 for buzzer on
                 if(addOnSocket!=null && addOnConnectSuccess){
                     sendSignal("7", addOnSocket);
                 }
