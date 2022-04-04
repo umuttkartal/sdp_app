@@ -3,11 +3,11 @@ package com.example.circulatio;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.os.IResultReceiver;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+
 
 public class MassageController {
 
@@ -24,8 +24,6 @@ public class MassageController {
         result.put("MassageIntensity", DEFAULT_MASSAGE_INTENSITY);
         return Collections.unmodifiableMap(result);
     }
-
-
 
     private static final String STOP_MESSAGE = "3";
     private static final String START_MESSAGE_HEADER = "2";

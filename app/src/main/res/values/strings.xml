@@ -12,14 +12,14 @@
     <string name="find_devices">Find Devices</string>
     <string name="connect_device">Connect to your Circulatio!</string>
     <string name="circulatio_logo">Circulatio logo</string>
-    <string name="device">Device</string>
+    <string name="device">Massaging device</string>
     <string name="tap_to_set_up_circulatio">Press here to set up Circulatio</string>
-    <string name="what_is_your_name">Please enter your first name:</string>
+    <string name="what_is_your_name">Enter your first name:</string>
     <string name="name">Name</string>
-    <string name="please_select_your_circulatio">Please select your Circulatio:</string>
-    <string name="please_enter_your_circulatio_pin">Please enter your Circulatio Pin:</string>
+    <string name="please_select_your_circulatio">Select your Circulatio:</string>
+    <string name="please_enter_your_circulatio_pin">Enter PIN of your Circulatio:</string>
     <string name="submit">submit</string>
-    <string name="confirm_checkbox">You confirm that you have read Circulatio\'s user manual</string>
+    <string name="confirm_checkbox">You confirm that you have read Circulatio\'s User Manual</string>
     <string name="your_circulatio">Your Circulatio</string>
     <string name="not_connected">Not connected</string>
     <string name="connected">Connected</string>
@@ -30,7 +30,7 @@
     <string name="start">START</string>
     <string name="turn_massage_on_off">Turn massage on/off</string>
     <string name="user_manual">User Manual</string>
-    <string name="user_manual_text"><b>1. Users</b>\n<b>1.1. Target audience</b>\nCirculatio is mainly targeted to people
+    <string name="user_manual_text"><b>1. Users</b>\n<b>1.1. Target Audience</b>\nCirculatio is mainly targeted to people
         who must sit for extended periods of time without the ability or habits to exercise their
         legs occasionally. The target user of Circulatio must be in a good health; meaning that users
         must not belong to any vulnerable groups of people (see the following section <i>1.2 Users outside
@@ -44,27 +44,64 @@
         5. People with severely reduced mental skills.\n
         If you are not sure whether you are advised to use Circulatio, please consult your doctor or at least
         talk with a pharmacist.\n\n
-        <b>2. User interaction</b>\n
-        <b>2.1. Core Interaction with the Device</b>\n
+        <b>2. Set Up </b>\n
+        After you purchase our device, you will be required to set it up. We aimed for the intuitive set up
+        process, but please keep in mind these things:\n
+        1. When entering your first name, please enter only 1 name (without whitespaces) and do not exceed the character count.\n
+        2. When selecting your Circulatio, please make sure the massaging device is on. In the list of all the available devices, you should
+        search for the device whose name contains the word \"Circulatio\" in it.\n
+        3. PIN code of the massaging device is a 5 digit PIN which is located on your massaging device as a sticker.\n
+        4. Add-on is an optional device which you can attach to your chair to track your sitting and periodically recommend the massager.
+        If you have purchased this add-on, answer \"yes\" in the 4th question and you will see new windows to enter information
+        about the add-on. If you are not using the add-on, then you can select \"no\" and finish the set up.\n
+        5. When selecting your add-on, please make sure the add-on device is on. In the list of all the available devices, you should
+        search for the device whose name contains the word \"CirculatioAddOn\" in it.\n
+        6. PIN code of the add-on is a 5 digit PIN which is located on your add-on device as a sticker.\n
+        7. Before submitting your answers, please get acquainted with the whole User Manual and not only this section.\n\n
+        <b>3. User Interaction</b>\n
+        <b>3.1. Core Interaction with the Add-on</b>\n
+        If you are not using the add-on, please skip this section and go to 3.2.\n
+        To use the add-on, you only need to set it up once and then there is no further mandatory interaction, except
+        for occasionally charging it. Note that you can reuse the same add-on for different chairs. Every time you reuse the add-on, please make sure to follow the below described steps when you reposition it.
+        Steps to set up the add-on physically:\n
+        1. Stick the connecting part to the left or right side of your chair\'s seat. This might be a plastic element (LEGO)
+        or a magnetic one depending on which version of the add-on you purchased.\n
+        2. Attach the add-on device to this connecting part.\n
+        3. Adapt the add-on\'s position to your particular chair and to yourself. Please sit down on the chair and make sure
+        that the range finder sensor (2 circular metal pieces) is within the level of your thighs. Also make sure that it is not blocked
+        by the protruding parts of the chair\'s seat. To make sure that it is attached correctly, you can open the app and observe if
+        \"Your position\" readings change correctly when you change your position from sitting to standing and vice versa.\n
+        If you completed all the steps correctly, the add-on should work as intended. The add-on will measure your sedentary time and
+        recommend to use the massaging device every 3 hours of continuous sitting (i.e. 3 hours of sitting without taking any breaks longer than 5 minutes; if you take a break
+        of 5 minutes or longer, then sedentary timer is reset to 0 and the counting starts all over again). We selected the threshold of the 3 hours
+        because according to many medical articles, blood clots start forming after 3-4 hours of continuous sitting.\n\n
+        <b>3.2. Core Interaction with the Massaging Device</b>\n
         Circulatio aims to provide an intuitive design which requires minimal interaction with the
         device itself. Steps to use Circulatio:\n
         1. Putting the device on.\n
         2. Adapting the device to your leg size.\n
-        3. (App) Selecting the desired vibration type, intensity and massage length via app.\n
+        3. (App) Selecting the desired vibration type, intensity and massage length or selecting the recommended massage (see the section <i>4. Recommended Massage Length Calculation</i>).\n
         4. (App) Pressing the \'Start\' button to start the device.\n
         5. (App, Optional) Pausing the massage and resuming the massage again.\n
         6. (App) Pressing the \'Stop\' button which turns the device off and returns it into initial position.\n
         7. Taking the device off.\n
-        If you need any assistance while using the device, please also show this user manual to the person who assists you.\n\n
+        If you need any assistance while using the device, please also show this User Manual to the person who assists you.\n\n
 
-        <b>2.2. Physical activity and Circulatio</b>\n
+        <b>3.3. Physical Activity and Circulatio</b>\n
         Even though Circulatio improves blood circulation, it cannot be used to substitute or reduce
         healthy physical activity. Users should maintain the same level of physical activity (or ideally
         increase their physical activity after observing one\'s long sedentary time) which they had
         before starting to use Circulatio. By physical activity we refer to exercising, walking, running,
         stretching one\'s legs and other similar activities. These activities not only improve person\'s
         blood circulation but also provide other health benefits such as strengthen your joins, improve metabolism,
-        reduce risk of various diseases, improve mental health and mood, etc, which Circulatio obviously cannot provide.
+        reduce risk of various diseases, improve mental health and mood, etc, which Circulatio obviously cannot provide.\n\n
+
+        <b>4. Recommended Massage Length Calculation</b>\n
+        The minimum recommended massage is 5 minutes long. The length of the recommended massage might increase depending on how many steps you have taken on the given day.
+        If it is less than the recommended standard of 10000 steps, then you will be added 2 minutes of the massage for every 1000 steps not taken.
+        \n If you are using the add-on, then we can recommend you a more accurate massage. The add-on will sense your movements while you sit and
+        based on that recommend a shorter or longer massage. If more than 50% of the readings indicate movement, then you are considered as an active sitter and the massage is not
+        extended. Otherwise, you are considered as a passive sitter and 5 additional minutes of the massage are added on top.
 
     </string>
     <string name="stop">STOP</string>
@@ -72,6 +109,31 @@
 
     <string name="notification_circulatio_title">Circulatio</string>
     <string name="notification_circulatio_text">Bluetooth Connection</string>
-    <string name="start_massage">Start massage</string>
+    <string name="start_massage">Set up massage</string>
     <string name="stop_massage_button">Stop massage</string>
+    <string name="will_you_be_using_an_add_on">Will you be using an add-on?</string>
+    <string name="enter_pin_of_your_add_on">Enter PIN of your add-on:</string>
+    <string name="select_your_add_on">Select your add-on:</string>
+    <string name="vertical_ellipsis">&#8942;</string>
+    <string name="add_on_readings">Add-on readings</string>
+    <string name="select_the_recommended_massage">Select the recommended massage</string>
+    <string name="or">OR</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="addOnConnect">Press here to connect the add-on</string>
+    <string name="continue_massage">CONTINUE</string>
+    <string name="if_you_have_any_questions_please_refer_to_the_section_2_in_the_user_manual_info_icon">If you have any questions, please refer to the section 2 in the User Manual (Info icon).</string>
+
+    <string-array name="addOnOptions">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+
+    <string-array name="massageIntensity">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
 </resources>

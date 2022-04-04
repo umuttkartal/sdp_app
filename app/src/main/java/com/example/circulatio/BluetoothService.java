@@ -15,40 +15,54 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 public class BluetoothService extends Service {
     private BluetoothAdapter mBluetoothAdapter;
     String addressHC = "98:D3:32:31:30:0F";
-//    String address = "84:CC:A8:11:F5:72";
+    //    String address = "84:CC:A8:11:F5:72";
     String address = "84:CC:A8:12:0D:E6";
+    String addOnAddress = "A8:03:2A:EC:50:C2";
     private ProgressDialog progress;
     BluetoothAdapter myBluetooth = null;
-    static BluetoothSocket btSocket = null;
+    public static BluetoothSocket btSocket = null;
+    public static BluetoothSocket addOnSocket = null;
     private boolean isBtConnected = false;
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-//    static final UUID myServiceUUID = UUID.fromString("4fafc201-1fb5-459e-8fcc-c5c9c331914b");
+    //    static final UUID myServiceUUID = UUID.fromString("4fafc201-1fb5-459e-8fcc-c5c9c331914b");
 //    static final UUID myUUID = UUID.fromString("beb5483e-36e1-4688-b7f5-ea07361b26a8");
-    private boolean ConnectSuccess = true;
+    public static boolean ConnectSuccess = false;
+    public static boolean addOnConnectSuccess = false;
+    private boolean useAddOn = false;
 
     private BroadcastReceiver buzzerOnSignalReceiver;
     private BroadcastReceiver buzzerOffSignalReceiver;
     private BroadcastReceiver reconnectSignalReceiver;
+    private BroadcastReceiver disconnectSignalReceiver;
+    private BroadcastReceiver addOnReconnectSignalReceiver;
+    private BroadcastReceiver addOnLedOnReceiver;
+    private BroadcastReceiver addOnLedOffReceiver;
+
+    MyBinder binder=new MyBinder();
+    BluetoothService bleService;
 
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return binder;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -56,9 +70,18 @@ public class BluetoothService extends Service {
     public void onCreate() {
         super.onCreate();
         System.out.println("onnnCreate");
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
             startMyOwnForeground();
         startMyOwnForeground();
+    }
+
+    public class MyBinder extends Binder
+    {
+        public BluetoothService getServiceSystem()
+        {
+            return BluetoothService.this;
+        }
     }
 
     public BluetoothSocket getBtSocket(){
@@ -96,6 +119,7 @@ public class BluetoothService extends Service {
                 Log.i("BLUETOOTH", "Starting Circulatio...");
                 startInForeground();
                 initCirculatioService();
+                initAddOnService();
             }
         }.start();
         return START_STICKY;
@@ -115,6 +139,54 @@ public class BluetoothService extends Service {
             final int SERVICE_NOTIFICATION_ID = 8598001;
             startForeground(SERVICE_NOTIFICATION_ID, notification);
         }
+
+        final IntentFilter disconnectSignal = new IntentFilter();
+        disconnectSignal.addAction(Constants.ACTION_CIRCULATIO_DISCONNECT);
+        disconnectSignalReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i("BLE", "Got disconnect message");
+                disconnect();
+            }
+        };
+        registerReceiver(disconnectSignalReceiver, disconnectSignal);
+    }
+
+
+    public void initAddOnService(){
+        if(SetUpInfo.useAddOn) {
+            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            try {
+                BluetoothDevice circulatioAddOn = mBluetoothAdapter.getRemoteDevice(addOnAddress);
+                addOnSocket = circulatioAddOn.createInsecureRfcommSocketToServiceRecord(myUUID);
+                addOnSocket.connect();
+                addOnConnectSuccess = true;
+//                receiveData(addOnSocket);
+                Log.i("BLE", "Connected to the add on!!!");
+                MainActivity.mIsAddOnConnected = true;
+            } catch (IOException e) {
+                MainActivity.mIsAddOnConnected = false;
+                addOnConnectSuccess = false;
+
+
+                Log.i("BLE", "Could not connect to add on!!!");
+            }
+        }else{
+            Log.i("BLE", "Not using add on!!!");
+        }
+
+        final IntentFilter addOnReconnectSignal = new IntentFilter();
+        addOnReconnectSignal.addAction(Constants.ACTION_ADDON_RECONNECT);
+        addOnReconnectSignalReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i("BLE", "Got add on reconnect message");
+                addOnReconnect();
+            }
+        };
+        registerReceiver(addOnReconnectSignalReceiver, addOnReconnectSignal);
     }
 
     public void initCirculatioService(){
@@ -133,10 +205,15 @@ public class BluetoothService extends Service {
             BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
             btSocket.connect();
             ConnectSuccess=true;
+            Log.i("BLE", "Connected to Circulatio!!!!!!!");
+            MainActivity.mIsCirculatioConnected = true;
+
 //                    }
 //            }
         } catch (IOException e) {
             ConnectSuccess = false;
+            MainActivity.mIsCirculatioConnected = false;
+
             Log.i("BLE", "Could not connect to device!!!");
         }
 
@@ -147,7 +224,13 @@ public class BluetoothService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i("BLE", "Got buzzer on message");
-                sendSignal("2"); // 1 for led on, 2 for buzzer on
+//                String type = intent.getExtras().getString("type");
+                String intensity = intent.getExtras().getString("intensity");
+                String duration = intent.getExtras().getString("duration");
+                sendSignal("2" + intensity + duration, btSocket); // 1 for led on, 2 for buzzer on
+                if(addOnSocket!=null && addOnConnectSuccess){
+                    sendSignal("7", addOnSocket);
+                }
             }
         };
         registerReceiver(buzzerOnSignalReceiver, buzzerOn);
@@ -159,10 +242,28 @@ public class BluetoothService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i("BLE", "Got buzzer off message");
-                sendSignal("3"); // 0 for led off, 3 for buzzer off
+                sendSignal("3", btSocket); // 0 for led off, 3 for buzzer off
+                if(addOnSocket!=null && addOnConnectSuccess){
+                    sendSignal("8", addOnSocket);
+                }
             }
         };
         registerReceiver(buzzerOffSignalReceiver, buzzerOff);
+
+//        final IntentFilter buzzerContinue = new IntentFilter();
+//        buzzerContinue.addAction(Constants.ACTION_CIRCULATIO_BUZZER_CONTINUE);
+//        buzzerOffSignalReceiver = new BroadcastReceiver() {
+//
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                Log.i("BLE", "Got buzzer off message");
+//                sendSignal("3", btSocket); // 0 for led off, 3 for buzzer off
+//                if(addOnSocket!=null){
+//                    sendSignal("8", addOnSocket);
+//                }
+//            }
+//        };
+//        registerReceiver(buzzerOffSignalReceiver, buzzerContinue);
 
         final IntentFilter reconnectSignal = new IntentFilter();
         reconnectSignal.addAction(Constants.ACTION_CIRCULATIO_RECONNECT);
@@ -175,6 +276,8 @@ public class BluetoothService extends Service {
             }
         };
         registerReceiver(reconnectSignalReceiver, reconnectSignal);
+
+        receiveDataCirculatio(btSocket);
     }
 
     private void reconnect(){
@@ -190,6 +293,7 @@ public class BluetoothService extends Service {
             BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
             btSocket.connect();
             ConnectSuccess=true;
+            receiveDataCirculatio(btSocket);
 //                    }
 //            }
         } catch (IOException e) {
@@ -198,10 +302,29 @@ public class BluetoothService extends Service {
         }
     }
 
-    private void sendSignal ( String number ) {
-        if ( btSocket != null ) {
+    private void addOnReconnect(){
+        if(SetUpInfo.useAddOn) {
+            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             try {
-                btSocket.getOutputStream().write(number.toString().getBytes());
+                BluetoothDevice circulatioAddOn = mBluetoothAdapter.getRemoteDevice(addOnAddress);
+                addOnSocket = circulatioAddOn.createInsecureRfcommSocketToServiceRecord(myUUID);
+                addOnSocket.connect();
+                addOnConnectSuccess = true;
+//                receiveData(addOnSocket);
+                Log.i("BLE", "Connected to the add on!!!");
+            } catch (IOException e) {
+                addOnConnectSuccess = false;
+                Log.i("BLE", "Could not connect to add on!!!");
+            }
+        }else{
+            Log.i("BLE", "Not using add on!!!");
+        }
+    }
+
+    private void sendSignal ( String number, BluetoothSocket socket ) {
+        if ( socket != null ) {
+            try {
+                socket.getOutputStream().write(number.toString().getBytes());
 
             } catch (IOException e) {
                 Log.i("BL", "Error");
@@ -209,12 +332,22 @@ public class BluetoothService extends Service {
         }
     }
 
-    private void Disconnect () {
+    private void disconnect () {
         if ( btSocket!=null ) {
             try {
                 btSocket.close();
+                ConnectSuccess = false;
+
             } catch(IOException e) {
                 Log.i("BLE", "Error on disconnection");
+            }
+        }
+        if(addOnSocket!=null){
+            try{
+                addOnSocket.close();
+                addOnConnectSuccess = false;
+            }catch (IOException e){
+                Log.i("BLE", "Error on addOn disconnection");
             }
         }
     }
@@ -222,21 +355,117 @@ public class BluetoothService extends Service {
     @Override
     public void onDestroy() {
         Log.i("BLUETOOTH", "Service has been stopped");
-        Disconnect();
+        disconnect();
         super.onDestroy();
 //        unregisterReceiver(buzzerOnSignalReceiver);
 //        unregisterReceiver(buzzerOffSignalReceiver);
 
-        int pid = android.os.Process.myPid();
-        android.os.Process.killProcess(pid);
+//        int pid = android.os.Process.myPid();
+//        android.os.Process.killProcess(pid);
+
+        unregisterReceiver(buzzerOnSignalReceiver);
+        unregisterReceiver(buzzerOffSignalReceiver);
+        unregisterReceiver(reconnectSignalReceiver);
+        unregisterReceiver(disconnectSignalReceiver);
+        unregisterReceiver(addOnReconnectSignalReceiver);
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
         Log.i("BLUETOOTH", "Main Bluetooth service stopped by Android");
-        unregisterReceiver(buzzerOnSignalReceiver);
-        unregisterReceiver(buzzerOffSignalReceiver);
-        unregisterReceiver(reconnectSignalReceiver);
+//        unregisterReceiver(buzzerOnSignalReceiver);
+//        unregisterReceiver(buzzerOffSignalReceiver);
+//        unregisterReceiver(reconnectSignalReceiver);
+//        unregisterReceiver(disconnectSignalReceiver);
+//        unregisterReceiver(addOnReconnectSignalReceiver);
         return super.onUnbind(intent);
+    }
+
+    private void receiveData(BluetoothSocket socket){
+        new Thread(){
+            @Override
+            public void run() {
+                if (socket != null) {
+                    try {
+                        InputStream socketInputStream = socket.getInputStream();
+                        byte[] buffer = new byte[256];
+                        int bytes;
+
+                        // Keep looping to listen for received messages
+                        while (true) {
+                            try {
+                                bytes = socketInputStream.read(buffer);            //read bytes from input buffer
+                                String readMessage = new String(buffer, 0, bytes);
+                                switch (readMessage) {
+                                    case "5": {
+                                        Intent intent = new Intent();
+                                        intent.setAction(Constants.ACTION_USER_SITTING);
+                                        // Data you need to pass to activity
+                                        getApplicationContext().sendBroadcast(intent);
+                                        break;
+                                    }
+                                    case "6": {
+                                        Intent intent = new Intent();
+                                        intent.setAction(Constants.ACTION_USER_STANDING);
+                                        // Data you need to pass to activity
+                                        getApplicationContext().sendBroadcast(intent);
+                                        break;
+                                    }
+                                    case "3": {
+                                        Intent intent = new Intent();
+                                        intent.setAction(Constants.ACTION_MASSAGE_NOTIF);
+                                        // Data you need to pass to activity
+                                        getApplicationContext().sendBroadcast(intent);
+                                        break;
+                                    }
+                                }
+                                // Send the obtained bytes to the UI Activity via handler
+                                Log.i("logging", readMessage + "");
+                            } catch (IOException e) {
+                                Log.i("EXCEPTION", "BREAK");
+                                addOnConnectSuccess = false;
+                                break;
+                            }
+                        }
+                    } catch (IOException e) {
+                        Log.i("READ", "Error on read!!");
+                        addOnConnectSuccess = false;
+
+                    }
+                }
+            }
+        }.start();
+    }
+
+    private void receiveDataCirculatio(BluetoothSocket socket){
+        new Thread(){
+            @Override
+            public void run() {
+                if (socket != null) {
+                    try {
+                        InputStream socketInputStream = socket.getInputStream();
+                        byte[] buffer = new byte[256];
+                        int bytes;
+
+                        // Keep looping to listen for received messages
+                        while (true) {
+                            try {
+                                bytes = socketInputStream.read(buffer);            //read bytes from input buffer
+                                String readMessage = new String(buffer, 0, bytes);
+                                // Send the obtained bytes to the UI Activity via handler
+                                Log.i("logging circulatio", readMessage + "");
+                            } catch (IOException e) {
+                                Log.i("EXCEPTION", "BREAK");
+                                ConnectSuccess = false;
+                                break;
+                            }
+                        }
+                    } catch (IOException e) {
+                        Log.i("READ", "Error on read!!");
+                        ConnectSuccess = false;
+                    }
+                }
+            }
+        }.start();
     }
 }
