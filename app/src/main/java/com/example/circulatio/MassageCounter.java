@@ -33,6 +33,7 @@ public class MassageCounter extends AppCompatActivity {
         stopButton = (Button)findViewById(R.id.stopButton);
 
         setTimer(MassageController.getLength(getApplicationContext()));
+
         Log.i("MASSAGE COUNTER", MassageController.getLength(getApplicationContext()).toString());
 
         stopButton.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +60,7 @@ public class MassageCounter extends AppCompatActivity {
 //                        finish();
 //                    }
 //                }, 2000);
+
                 Intent i = new Intent(MassageCounter.this, MainActivity.class);
                 startActivity(i);
                 finish();
@@ -81,13 +83,13 @@ public class MassageCounter extends AppCompatActivity {
                     getApplicationContext().sendBroadcast(intent);
                     pauseButton.setText(R.string.pause);
                 }
-
             }
         });
     }
 
     public void setTimer(Integer time) {
         countDownTimer = new CountDownTimer((int)time * ONE_SECOND_IN_MILLISECONDS,ONE_SECOND_IN_MILLISECONDS) {
+
             @Override
             public void onTick(long millisUntilFinished) {
                 int minutes = (int)(Math.floor((millisUntilFinished / 1000) / 60));
