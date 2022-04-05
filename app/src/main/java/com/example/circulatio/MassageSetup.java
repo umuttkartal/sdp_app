@@ -61,7 +61,7 @@ public class MassageSetup extends AppCompatActivity {
 
 
                 String intensity = intensitySpinner.getSelectedItem().toString();
-                String intensityNum = null;
+                String intensityNum = "14";
                 if(intensity.equals("Low")){
                     intensityNum = "51";
                 }
@@ -73,6 +73,7 @@ public class MassageSetup extends AppCompatActivity {
                 }
 
                 MassageController.setLength(length, getApplicationContext());
+                MassageController.setIntensity(Integer.parseInt(intensityNum), getApplicationContext());
                 Intent intent = new Intent();
                 intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_ON);
                 intent.putExtra("intensity", intensityNum);

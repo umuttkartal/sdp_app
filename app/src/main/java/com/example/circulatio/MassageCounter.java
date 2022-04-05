@@ -34,7 +34,7 @@ public class MassageCounter extends AppCompatActivity {
 
         setTimer(MassageController.getLength(getApplicationContext()));
 
-        Log.i("MASSAGE COUNTER", MassageController.getLength(getApplicationContext()).toString());
+//        Log.i("MASSAGE COUNTER", MassageController.getLength(getApplicationContext()).toString());
 
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,11 +76,17 @@ public class MassageCounter extends AppCompatActivity {
                     // Data you need to pass to activity
                     getApplicationContext().sendBroadcast(intent);
                     pauseButton.setText(R.string.continue_massage);
+                    countDownTimer.cancel();
                 }else if((pauseButton.getText().toString()).equals("CONTINUE")){
+                    String zeros = "00000";
+                    String out = zeros.substring(0, 5 - Integer.toString(timerLeft).length()) + Integer.toString(timerLeft);
                     Intent intent = new Intent();
                     intent.setAction(Constants.ACTION_CIRCULATIO_BUZZER_ON);
+                    intent.putExtra("intensity", Integer.toString(MassageController.getIntensity(getApplicationContext())));
+                    intent.putExtra("duration", out);
                     // Data you need to pass to activity
                     getApplicationContext().sendBroadcast(intent);
+                    setTimer(timerLeft);
                     pauseButton.setText(R.string.pause);
                 }
             }
@@ -95,6 +101,7 @@ public class MassageCounter extends AppCompatActivity {
                 int minutes = (int)(Math.floor((millisUntilFinished / 1000) / 60));
                 int seconds = (int)((millisUntilFinished / 1000) % 60);
 
+                timerLeft = (int)(millisUntilFinished / 1000);
                 countDownTimerText.setText(String.format("%02d : %02d",minutes,seconds));
             }
 
@@ -106,6 +113,6 @@ public class MassageCounter extends AppCompatActivity {
                 // Data you need to pass to activity
                 getApplicationContext().sendBroadcast(intent);
             }
-        };
+        }.start();
     }
 }
