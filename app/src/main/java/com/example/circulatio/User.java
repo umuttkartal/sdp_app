@@ -10,6 +10,7 @@ import java.util.Locale;
  * This class is used to access and interact with information about the user.
  */
 public class User {
+    private static final String CORRECT_PIN = "12345";
 
     private static boolean dataLoaded;
 
@@ -102,8 +103,9 @@ public class User {
      */
     private static boolean isValidPin(String pin) {
         boolean isLengthFive = pin.length() == 5;
+        boolean pinCorrect = pin.equals(CORRECT_PIN);
 
-        return isLengthFive;
+        return isLengthFive && pinCorrect;
     }
 
     /**

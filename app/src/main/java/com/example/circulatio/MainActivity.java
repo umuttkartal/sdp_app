@@ -107,15 +107,15 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("BLE", String.valueOf(mIsAddOnConnected));
                 if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
 
-                    Intent intentCR = new Intent();
-                    intentCR.setAction(Constants.ACTION_CIRCULATIO_RECONNECT);
-                    // Data you need to pass to activity
-                    getApplicationContext().sendBroadcast(intentCR);
-
-                    Intent intentAR = new Intent();
-                    intentAR.setAction(Constants.ACTION_ADDON_RECONNECT);
-                    // Data you need to pass to activity
-                    getApplicationContext().sendBroadcast(intentAR);
+//                    Intent intentCR = new Intent();
+//                    intentCR.setAction(Constants.ACTION_CIRCULATIO_RECONNECT);
+//                    // Data you need to pass to activity
+//                    getApplicationContext().sendBroadcast(intentCR);
+//
+//                    Intent intentAR = new Intent();
+//                    intentAR.setAction(Constants.ACTION_ADDON_RECONNECT);
+//                    // Data you need to pass to activity
+//                    getApplicationContext().sendBroadcast(intentAR);
 
                     Handler h = new Handler();
                     h.postDelayed(new Runnable() {
