@@ -2,8 +2,15 @@ package com.example.circulatio;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +28,7 @@ public class MassageSetup extends AppCompatActivity {
     private Spinner intensitySpinner;
     private EditText textEnterLength;
     String length;
+
 
 
     @Override
@@ -62,13 +70,13 @@ public class MassageSetup extends AppCompatActivity {
 
                 String intensity = intensitySpinner.getSelectedItem().toString();
                 String intensityNum = "14";
-                if(intensity.equals("Low")){
+                if (intensity.equals("Low")) {
                     intensityNum = "51";
                 }
-                if (intensity.equals("Medium")){
+                if (intensity.equals("Medium")) {
                     intensityNum = "47";
                 }
-                if(intensity.equals("High")){
+                if (intensity.equals("High")) {
                     intensityNum = "14";
                 }
 
@@ -81,8 +89,8 @@ public class MassageSetup extends AppCompatActivity {
                 // Data you need to pass to activity
                 getApplicationContext().sendBroadcast(intent);
 
-                Intent inn1=getIntent();
-                inn1=new Intent(MassageSetup.this,MassageCounter.class);
+                Intent inn1 = getIntent();
+                inn1 = new Intent(MassageSetup.this, MassageCounter.class);
                 startActivity(inn1);
                 finish();
             }
@@ -121,5 +129,10 @@ public class MassageSetup extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         intensitySpinner.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
