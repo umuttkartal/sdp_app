@@ -2,24 +2,15 @@ package com.example.circulatio;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 public class MassageSetup extends AppCompatActivity {
 
@@ -28,8 +19,6 @@ public class MassageSetup extends AppCompatActivity {
     private Spinner intensitySpinner;
     private EditText textEnterLength;
     String length;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
