@@ -7,9 +7,14 @@
     android:background="@color/background"
     tools:context=".MassageSetup">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/device_frame" />
+
+
+<!--    <include-->
+<!--        android:id="@+id/include"-->
+<!--        layout="@layout/device_frame" />-->
+
+
+
 
     <!--    <ImageView-->
     <!--        android:id="@+id/imageView2"-->
@@ -20,7 +25,6 @@
     <!--        app:layout_constraintStart_toStartOf="@+id/imageView"-->
     <!--        app:layout_constraintTop_toBottomOf="@+id/imageView"-->
     <!--        app:srcCompat="@drawable/ic_baseline_battery_full_24" />-->
-
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -42,12 +46,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/CirculatioFrame">
 
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/massage"
-                android:textColor="@color/black"
+            <ImageButton
+                android:id="@+id/buttonInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"                       
+                android:background="#0000"
+                android:src="@drawable/ic_baseline_info_32"
+                android:tint="@color/black"
+                android:layout_gravity="right"
                 android:textSize="18sp" />
 
             <View
