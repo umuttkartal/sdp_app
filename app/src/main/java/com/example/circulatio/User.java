@@ -133,6 +133,8 @@ public class User {
         loadUserData(context);
     }
 
+    public static void createAddonData(String addonDeviceID,)
+
     /**
      * Capitalise the first letter of the name then makes the rest lowercase.
      *
